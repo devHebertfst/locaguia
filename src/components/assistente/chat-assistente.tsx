@@ -321,7 +321,7 @@ function Resposta({
               : "Não encontramos um equipamento para esse serviço no catálogo."}{" "}
             Você pode descrever o serviço de outro jeito ou ver tudo o que temos.
           </p>
-          <Link href="/" className="w-fit font-medium underline underline-offset-4">
+          <Link href="/catalogo" className="w-fit font-medium underline underline-offset-4">
             Ver o catálogo completo
           </Link>
         </div>

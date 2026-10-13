@@ -6,7 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const LINKS: { href: string; rotulo: string }[] = [
-  { href: "/", rotulo: "Catálogo" },
+  { href: "/catalogo", rotulo: "Catálogo" },
   { href: "/assistente", rotulo: "Assistente" },
 ];
 
@@ -19,7 +19,7 @@ export function NavLinks({ caminho }: { caminho?: string }) {
   return (
     <nav aria-label="Principal" className="flex items-center gap-0.5 text-[0.8rem] sm:gap-2 sm:text-sm">
       {LINKS.map(({ href, rotulo }) => {
-        const atual = href === "/" ? caminho === "/" : Boolean(caminho?.startsWith(href));
+        const atual = Boolean(caminho?.startsWith(href));
         return (
           <Link
             key={href}

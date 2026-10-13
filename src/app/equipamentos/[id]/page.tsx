@@ -28,7 +28,7 @@ export default function EquipamentoPage({ params }: PageProps<"/equipamentos/[id
       <div className="chao-terra">
         <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6">
           <Link
-            href="/#catalogo"
+            href="/catalogo"
             className="inline-flex w-fit items-center gap-2 text-sm font-medium text-white/75 hover:text-white"
           >
             <ArrowLeft aria-hidden className="size-4" />

@@ -5,12 +5,11 @@ test("a página inicial abre com o nome do site", async ({ page }) => {
   await expect(page).toHaveTitle(/LocaGuia/);
 });
 
-test("o catálogo da home leva direto ao orçamento do equipamento", async ({ page }) => {
+test("a home leva ao catálogo, filtrado pela categoria escolhida", async ({ page }) => {
   await page.goto("/");
-  const cartao = page.getByRole("article").filter({ hasText: "Betoneira 400 litros" });
-  await cartao.getByRole("link", { name: "Pedir orçamento" }).click();
-  await expect(page).toHaveURL(/\/orcamento\?equipamentos=/);
-  await expect(page.locator("form").getByText("Betoneira 400 litros")).toBeVisible();
+  await page.getByRole("region", { name: "Equipamentos por tipo de serviço" }).getByRole("link", { name: /Corte/ }).click();
+  await expect(page).toHaveURL(/\/catalogo\?categoria=Corte$/);
+  await expect(page.getByRole("link", { name: /Serra mármore/ })).toBeVisible();
 });
 
 test("perguntas frequentes abrem e fecham", async ({ page }) => {

@@ -1,13 +1,50 @@
 import { Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Plus } from "lucide-react";
-import { BuscaCatalogo } from "@/components/catalogo/busca-catalogo";
-import { CartaoEquipamento } from "@/components/catalogo/cartao-equipamento";
-import { FiltroCategorias } from "@/components/catalogo/filtro-categorias";
+import { connection } from "next/server";
+import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
+import { Avaliacoes } from "@/components/home/avaliacoes";
 import { TopoHome } from "@/components/home/topo-home";
 import { buttonVariants } from "@/components/ui/button";
-import { lerFiltros } from "@/lib/catalogo/filtros";
-import { listarCategorias, listarEquipamentos } from "@/lib/catalogo/consultas";
+import { hrefCatalogo } from "@/lib/catalogo/filtros";
+import { resumoCategorias } from "@/lib/catalogo/consultas";
+
+// Fotos de obra do Unsplash (licença livre). A query precisa ser igual à
+// liberada em next.config.ts (remotePatterns).
+const unsplash = (id: string) => `https://images.unsplash.com/photo-${id}?w=2000&q=80&fm=jpg`;
+
+const FOTOS = {
+  obra: {
+    src: unsplash("1770822662967-7f66605f9103"),
+    alt: "Equipe com colete laranja e capacete colocando areia numa betoneira, numa rua em obra",
+    credito: "Agustín Pimentel",
+  },
+  profissional: {
+    src: unsplash("1694522362256-6c907336af43"),
+    alt: "Profissional de capacete cortando uma placa de concreto com esmerilhadeira",
+    credito: "Glenov Brankovic",
+  },
+  reforma: {
+    src: unsplash("1506367797262-92b157df3c61"),
+    alt: "Pés de uma pessoa sobre um piso de pastilhas brancas e rosadas, visto de cima",
+    credito: "Kelly Sikkema",
+  },
+};
+
+const MOTIVOS = [
+  {
+    titulo: "Sem gastar com compra",
+    texto: "Uma betoneira ou um martelete custam caro para usar em um fim de semana. Alugando, você paga só pelo período da obra.",
+  },
+  {
+    titulo: "Sem máquina parada em casa",
+    texto: "Nada de guardar, limpar e cuidar de equipamento que vai ficar meses encostado. Usou, devolve.",
+  },
+  {
+    titulo: "A ferramenta certa em cada etapa",
+    texto: "Quebrar, concretar, cortar piso, lixar parede: cada fase pede um equipamento diferente, e você troca conforme a obra anda.",
+  },
+];
 
 const PASSOS = [
   {
@@ -50,31 +87,97 @@ const PERGUNTAS = [
   },
 ];
 
-export default function HomePage({ searchParams }: PageProps<"/">) {
+const tituloSecao = "text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-medium tracking-[-0.02em]";
+
+export default function HomePage() {
   return (
     <main className="flex flex-1 flex-col">
       <TopoHome />
 
-      <section id="catalogo" aria-labelledby="titulo-catalogo" className="scroll-mt-4 bg-concreto">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 md:py-20">
-          <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
-            <h2 id="titulo-catalogo" className="text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-medium tracking-[-0.02em]">
-              Equipamentos para alugar
-            </h2>
-            <p className="max-w-md text-muted-foreground">
-              Fotos, descrição e disponibilidade de cada equipamento. Escolha e peça o orçamento.
-            </p>
+      {/* Faixa de abertura: a obra de verdade, depois da betoneira desenhada. */}
+      <section aria-labelledby="titulo-obra" className="relative isolate flex min-h-[32rem] items-end overflow-hidden bg-terra md:min-h-[38rem]">
+        <Image src={FOTOS.obra.src} alt={FOTOS.obra.alt} fill sizes="100vw" className="-z-10 object-cover object-[50%_40%]" />
+        {/* Véu terra: forte à esquerda e embaixo, onde fica o texto; a foto respira à direita. */}
+        <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(36_29_23/0.95)_0%,rgb(36_29_23/0.6)_40%,rgb(36_29_23/0)_75%),linear-gradient(to_right,rgb(36_29_23/0.85)_0%,rgb(36_29_23/0.5)_45%,rgb(36_29_23/0)_75%)]" />
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 pt-40 pb-12 sm:px-6 md:pb-16">
+          <h2 id="titulo-obra" className="max-w-3xl text-[clamp(2.2rem,5.5vw,4.25rem)] leading-[1.02] font-medium tracking-[-0.025em] text-white">
+            Máquina boa é a que trabalha. <span className="text-laranja">Alugue pelo tempo da obra.</span>
+          </h2>
+          <p className="max-w-xl text-lg leading-relaxed text-white/80">
+            Do contrapiso ao acabamento, você pega o equipamento quando precisa e devolve quando o serviço acaba.
+          </p>
+          <p className="text-xs text-white/50">Foto: {FOTOS.obra.credito} / Unsplash</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="titulo-para-quem" className="bg-white">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-16 sm:px-6 md:py-24">
+          <h2 id="titulo-para-quem" className={`${tituloSecao} max-w-2xl`}>
+            Para quem é do ramo e para quem nunca alugou
+          </h2>
+          <div className="grid gap-10 md:grid-cols-2 md:gap-8">
+            <Publico
+              foto={FOTOS.profissional}
+              titulo="Pedreiro, empreiteiro, profissional"
+              texto="Você já sabe o que precisa. Ache o equipamento, veja na hora se está disponível e peça o orçamento sem ligar nem esperar."
+              acao={{ href: "/catalogo", rotulo: "Ir para o catálogo" }}
+            />
+            <Publico
+              foto={FOTOS.reforma}
+              titulo="Vai reformar a casa"
+              texto="Não sabe o nome da máquina? Conte o serviço com suas palavras. O assistente indica o que alugar e lista o material que você vai comprar."
+              acao={{ href: "/assistente", rotulo: "Perguntar ao assistente" }}
+              deslocada
+            />
           </div>
-          <Suspense fallback={<CatalogoCarregando />}>
-            <Catalogo searchParams={searchParams} />
+        </div>
+      </section>
+
+      <section aria-labelledby="titulo-categorias" className="bg-concreto">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-16 sm:px-6 md:py-24">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <h2 id="titulo-categorias" className={tituloSecao}>
+              Equipamentos por tipo de serviço
+            </h2>
+            <Link href="/catalogo" className={buttonVariants({ variant: "terra", size: "lg", className: "w-fit" })}>
+              Ver catálogo completo
+              <ArrowRight aria-hidden />
+            </Link>
+          </div>
+          <Suspense fallback={<CategoriasCarregando />}>
+            <Categorias />
           </Suspense>
         </div>
       </section>
 
-      <section aria-labelledby="titulo-passos" className="bg-white">
+      <section aria-labelledby="titulo-motivos" className="bg-white">
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[1fr_1.5fr] md:py-24">
           <div className="flex flex-col gap-4">
-            <h2 id="titulo-passos" className="text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-medium tracking-[-0.02em]">
+            <h2 id="titulo-motivos" className={tituloSecao}>
+              Por que alugar em vez de comprar
+            </h2>
+            <p className="max-w-sm text-muted-foreground">
+              Para quem trabalha com obra e para quem faz uma reforma por ano, a conta costuma fechar do mesmo jeito.
+            </p>
+          </div>
+          <ul className="flex flex-col">
+            {MOTIVOS.map((m) => (
+              <li key={m.titulo} className="flex flex-col gap-2 border-t border-terra/12 py-7 first:border-t-0 first:pt-0">
+                <h3 className="flex items-center gap-3 text-2xl font-semibold">
+                  <span aria-hidden className="h-0.5 w-6 rounded-full bg-laranja" />
+                  {m.titulo}
+                </h3>
+                <p className="max-w-[56ch] text-muted-foreground">{m.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="titulo-passos" className="bg-concreto">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[1fr_1.5fr] md:py-24">
+          <div className="flex flex-col gap-4">
+            <h2 id="titulo-passos" className={tituloSecao}>
               Do serviço ao orçamento, sem enrolação
             </h2>
             <p className="max-w-sm text-muted-foreground">
@@ -87,7 +190,7 @@ export default function HomePage({ searchParams }: PageProps<"/">) {
                 key={passo.titulo}
                 className="grid grid-cols-[3.5rem_1fr] gap-x-5 border-t border-terra/12 py-7 first:border-t-0 first:pt-0 sm:grid-cols-[5rem_1fr]"
               >
-                <span aria-hidden className="font-heading text-5xl leading-none font-semibold text-laranja sm:text-6xl">
+                <span aria-hidden className="font-heading text-5xl leading-none font-semibold text-laranja-escuro sm:text-6xl">
                   {i + 1}
                 </span>
                 <div className="flex flex-col gap-1.5">
@@ -100,17 +203,19 @@ export default function HomePage({ searchParams }: PageProps<"/">) {
         </div>
       </section>
 
-      <section aria-labelledby="titulo-perguntas" className="bg-concreto">
+      <Avaliacoes />
+
+      <section aria-labelledby="titulo-perguntas" className="bg-white">
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[1fr_1.5fr] md:py-24">
-          <h2 id="titulo-perguntas" className="text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-medium tracking-[-0.02em]">
+          <h2 id="titulo-perguntas" className={tituloSecao}>
             Perguntas frequentes
           </h2>
           <div className="flex flex-col gap-2">
             {PERGUNTAS.map(({ pergunta, resposta }) => (
-              <details key={pergunta} className="group rounded-xl bg-white ring-1 ring-terra/8 open:ring-terra/20">
+              <details key={pergunta} className="group rounded-xl bg-concreto ring-1 ring-transparent open:bg-white open:ring-terra/15">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-5 py-4 font-heading text-lg font-semibold [&::-webkit-details-marker]:hidden">
                   {pergunta}
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-concreto transition-[background-color,rotate] duration-300 group-open:rotate-45 group-open:bg-laranja">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white transition-[background-color,rotate] duration-300 group-open:rotate-45 group-open:bg-laranja">
                     <Plus aria-hidden className="size-4" />
                   </span>
                 </summary>
@@ -124,7 +229,7 @@ export default function HomePage({ searchParams }: PageProps<"/">) {
       <section aria-labelledby="titulo-fechamento" className="bg-laranja text-terra">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-start justify-between gap-6 px-4 py-14 sm:px-6 md:flex-row md:items-center md:py-16">
           <h2 id="titulo-fechamento" className="max-w-2xl text-[clamp(1.9rem,4vw,3rem)] leading-[1.05] font-medium tracking-[-0.02em]">
-            Não achou o que precisa? Conte o serviço para o assistente.
+            Bora começar a obra? Conte o serviço para o assistente.
           </h2>
           <div className="flex flex-wrap gap-3">
             <Link href="/assistente" className={buttonVariants({ variant: "terra", size: "lg" })}>
@@ -132,10 +237,10 @@ export default function HomePage({ searchParams }: PageProps<"/">) {
               <ArrowRight aria-hidden />
             </Link>
             <Link
-              href="/orcamento"
+              href="/catalogo"
               className={buttonVariants({ variant: "outline", size: "lg", className: "border-terra/40 hover:bg-white/30" })}
             >
-              Pedir orçamento
+              Ver o catálogo
             </Link>
           </div>
         </div>
@@ -144,70 +249,75 @@ export default function HomePage({ searchParams }: PageProps<"/">) {
   );
 }
 
-async function Catalogo({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
-  const filtros = lerFiltros(await searchParams);
-  const [equipamentos, categorias] = await Promise.all([
-    listarEquipamentos(filtros),
-    listarCategorias(),
-  ]);
-  const filtrando = Boolean(filtros.busca || filtros.categoria);
-
+function Publico({
+  foto,
+  titulo,
+  texto,
+  acao,
+  deslocada,
+}: {
+  foto: { src: string; alt: string; credito: string };
+  titulo: string;
+  texto: string;
+  acao: { href: string; rotulo: string };
+  deslocada?: boolean;
+}) {
   return (
-    <>
-      <div className="flex flex-col gap-4">
-        <BuscaCatalogo buscaAtual={filtros.busca} categoriaAtual={filtros.categoria} />
-        <FiltroCategorias categorias={categorias} filtros={filtros} />
+    <article className={deslocada ? "flex flex-col gap-5 md:mt-20" : "flex flex-col gap-5"}>
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-concreto md:aspect-[5/4]">
+        <Image src={foto.src} alt={foto.alt} fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
+        <span className="absolute right-3 bottom-3 rounded-full bg-terra/70 px-2 py-0.5 text-xs text-white/80">
+          Foto: {foto.credito} / Unsplash
+        </span>
       </div>
-
-      {filtrando && (
-        <p className="text-sm text-muted-foreground" aria-live="polite">
-          {equipamentos.length === 1
-            ? "1 equipamento encontrado"
-            : `${equipamentos.length} equipamentos encontrados`}
-          {filtros.busca && <> para “{filtros.busca}”</>}
-          {filtros.categoria && <> em {filtros.categoria}</>}
-        </p>
-      )}
-
-      {equipamentos.length > 0 ? (
-        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-          {equipamentos.map((equipamento) => (
-            <li key={equipamento.id} className="flex">
-              <CartaoEquipamento equipamento={equipamento} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="flex flex-col items-start gap-3 rounded-xl border-2 border-dashed border-terra/15 p-8">
-          <p className="font-heading text-xl font-semibold">
-            {filtrando ? "Nenhum equipamento encontrado." : "Nenhum equipamento cadastrado ainda."}
-          </p>
-          {filtrando && (
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-              <Link href="/" scroll={false} className="font-medium underline">
-                Ver todos os equipamentos
-              </Link>
-              <Link href="/assistente" className="font-medium text-laranja-escuro underline">
-                Perguntar ao assistente
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
-    </>
+      <div className="flex flex-col gap-2">
+        <h3 className="text-3xl font-medium tracking-[-0.015em]">{titulo}</h3>
+        <p className="max-w-[48ch] text-lg leading-relaxed text-muted-foreground">{texto}</p>
+      </div>
+      <Link href={acao.href} className="group inline-flex w-fit items-center gap-2 font-semibold text-laranja-escuro">
+        <span className="underline decoration-2 underline-offset-4">{acao.rotulo}</span>
+        <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+      </Link>
+    </article>
   );
 }
 
-function CatalogoCarregando() {
+async function Categorias() {
+  await connection(); // lido a cada pedido, como o catálogo: nunca no build
+  const categorias = await resumoCategorias();
+  if (categorias.length === 0) {
+    return <p className="text-muted-foreground">O catálogo ainda está sendo montado.</p>;
+  }
   return (
-    <div aria-busy="true" aria-label="Carregando equipamentos" className="flex flex-col gap-4">
-      <div className="h-[3.25rem] animate-pulse rounded-full bg-white" />
-      <div className="h-9 w-2/3 animate-pulse rounded-full bg-white/70" />
-      <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-        {Array.from({ length: 6 }, (_, i) => (
-          <div key={i} className="h-32 animate-pulse rounded-xl bg-white sm:aspect-[4/5] sm:h-auto" />
-        ))}
-      </div>
+    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {categorias.map(({ categoria, total }) => (
+        <li key={categoria}>
+          <Link
+            href={hrefCatalogo({ categoria })}
+            className="group flex h-full items-center justify-between gap-4 rounded-xl bg-white px-5 py-5 ring-1 ring-terra/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(36_29_23/0.35)]"
+          >
+            <span className="flex flex-col gap-0.5">
+              <span className="font-heading text-xl font-semibold">{categoria}</span>
+              <span className="text-sm text-muted-foreground">
+                {total === 1 ? "1 equipamento" : `${total} equipamentos`}
+              </span>
+            </span>
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja">
+              <ArrowUpRight aria-hidden className="size-4" />
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function CategoriasCarregando() {
+  return (
+    <div aria-busy="true" aria-label="Carregando categorias" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {Array.from({ length: 8 }, (_, i) => (
+        <div key={i} className="h-[5.5rem] animate-pulse rounded-xl bg-white" />
+      ))}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LIMITES_ASSISTENTE } from "@/lib/assistente/nucleo";
 import { Betoneira3D, EVENTO_MISTURAR } from "./betoneira-3d";
@@ -90,11 +90,11 @@ export function TopoHome() {
           </form>
 
           <Link
-            href="#catalogo"
+            href="/catalogo"
             className="group inline-flex w-fit items-center gap-2 text-sm font-medium text-white/80 hover:text-white"
           >
             Já sei o que quero: ver equipamentos
-            <ArrowDown aria-hidden className="size-4 transition-transform group-hover:translate-y-0.5" />
+            <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
 
