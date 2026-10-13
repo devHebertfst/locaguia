@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/admin", rotulo: "Início" },
+  { href: "/admin/pedidos", rotulo: "Pedidos" },
   { href: "/admin/equipamentos", rotulo: "Equipamentos" },
 ];
 
