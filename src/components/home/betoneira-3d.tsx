@@ -294,13 +294,16 @@ function montarCena(THREE: Three, caixa: HTMLDivElement): () => void {
   const aoTrocarAba = () => !document.hidden && pedirQuadro();
   document.addEventListener("visibilitychange", aoTrocarAba);
 
-  const relogio = new THREE.Clock();
+  // O Timer ignora o tempo em que a aba ficou escondida (sem salto ao voltar).
+  const relogio = new THREE.Timer();
+  relogio.connect(document);
   let quadro = 0;
   let primeiro = true;
   let acumulado = 0;
 
-  function desenhar() {
+  function desenhar(instante?: number) {
     quadro = 0;
+    relogio.update(instante);
     // Girando sozinho, 30 quadros por segundo bastam e poupam bateria;
     // arrastando, desenha em todo quadro para acompanhar o dedo.
     acumulado += relogio.getDelta();
@@ -310,7 +313,7 @@ function montarCena(THREE: Three, caixa: HTMLDivElement): () => void {
     }
     const dt = Math.min(acumulado, 0.05);
     acumulado = 0;
-    const t = relogio.elapsedTime;
+    const t = relogio.getElapsed();
 
     const giroBase = reduzirMovimento ? 0 : 0.9 + estado.rolagem * 2.5;
     tambor.rotation.y += (giroBase + estado.impulso) * dt;
@@ -348,6 +351,7 @@ function montarCena(THREE: Three, caixa: HTMLDivElement): () => void {
 
   return () => {
     cancelAnimationFrame(quadro);
+    relogio.dispose();
     observadorTamanho.disconnect();
     observadorTela.disconnect();
     document.removeEventListener("visibilitychange", aoTrocarAba);
