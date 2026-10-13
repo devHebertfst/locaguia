@@ -34,6 +34,7 @@ Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; eve
 - **Data access is server-only.** The server connects as the DB owner. Every table has RLS on with no policies, so the browser can't read or write anything directly. Check the user's role in every Server Action or Route Handler with `exigirUsuario()` (`src/lib/auth/sessao.ts`); the proxy check is only optimistic.
 - Staff login: `/entrar` → Google through Supabase Auth → `/auth/callback`, which links the Auth account to the `usuarios` row by e-mail on first login and signs out anyone not authorized. The Supabase project needs the Google provider on and `<SITE_URL>/auth/callback` in its allowed redirect URLs.
 - Roles: `admin` can do everything, including managing users. `funcionario` manages equipment and quote requests. The first admin is inserted directly into the DB.
+- Visual system: `DESIGN.md` (tokens in `src/app/globals.css`, sidecar `.impeccable/design.json`) and product context in `PRODUCT.md`. Read both before UI work. The home hero renders a procedural three.js concrete mixer (`src/components/home/betoneira-3d.tsx`), lazy-loaded and static under reduced motion or software WebGL.
 - `src/lib/env.ts` validates env vars lazily on first access, so build and tests run without credentials.
 - Integrations: Gemini for the assistant, Turnstile for anti-spam, Resend for email to the shop, WhatsApp Cloud API for automatic notices to customers, a `wa.me` link to the shop's WhatsApp, and Vercel Cron.
 

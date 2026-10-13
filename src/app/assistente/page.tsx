@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ChatAssistente } from "@/components/assistente/chat-assistente";
+import { TituloPagina } from "@/components/titulo-pagina";
 
 export const metadata: Metadata = {
   title: "Assistente",
@@ -8,14 +9,15 @@ export const metadata: Metadata = {
 
 export default function AssistentePage() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 pt-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">O que você vai fazer?</h1>
-        <p className="text-muted-foreground">
-          Conte o serviço e o assistente indica os equipamentos da locadora e os materiais que você vai precisar.
-        </p>
+    <main className="flex flex-1 flex-col bg-concreto">
+      <TituloPagina
+        titulo="O que você vai fazer?"
+        descricao="Conte o serviço e o assistente indica os equipamentos da locadora e os materiais que você vai precisar."
+        largura="max-w-3xl"
+      />
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pt-8 sm:px-6">
+        <ChatAssistente />
       </div>
-      <ChatAssistente />
     </main>
   );
 }

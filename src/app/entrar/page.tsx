@@ -13,17 +13,19 @@ export const metadata: Metadata = {
 
 export default function EntrarPage({ searchParams }: PageProps<"/entrar">) {
   return (
-    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-12">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Área da equipe</h1>
-        <p className="text-muted-foreground">
-          Entre com a conta Google cadastrada pela locadora para gerenciar equipamentos e
-          pedidos de orçamento.
-        </p>
+    <main className="flex flex-1 items-center justify-center bg-concreto px-4 py-16">
+      <div className="flex w-full max-w-md flex-col gap-6 rounded-2xl bg-white p-6 ring-1 ring-terra/8 sm:p-8">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-4xl font-medium tracking-[-0.02em]">Área da equipe</h1>
+          <p className="text-muted-foreground">
+            Entre com a conta Google cadastrada pela locadora para gerenciar equipamentos e
+            pedidos de orçamento.
+          </p>
+        </div>
+        <Suspense fallback={<div aria-busy="true" className="h-12 animate-pulse rounded-full bg-concreto" />}>
+          <FormularioEntrar searchParams={searchParams} />
+        </Suspense>
       </div>
-      <Suspense fallback={<div aria-busy="true" className="h-20 animate-pulse rounded-lg bg-muted" />}>
-        <FormularioEntrar searchParams={searchParams} />
-      </Suspense>
     </main>
   );
 }
@@ -37,12 +39,12 @@ async function FormularioEntrar({ searchParams }: Pick<PageProps<"/entrar">, "se
   return (
     <form action={entrarComGoogle} className="flex flex-col gap-3">
       {erro && (
-        <p role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm">
+        <p role="alert" className="rounded-xl bg-destructive/8 p-4 text-sm text-destructive ring-1 ring-destructive/30">
           {MENSAGENS_ERRO_LOGIN[erro]}
         </p>
       )}
       <input type="hidden" name="proximo" value={proximo} />
-      <Button type="submit" size="lg" className="w-full">
+      <Button type="submit" size="lg" variant="terra" className="w-full">
         Entrar com Google
       </Button>
     </form>

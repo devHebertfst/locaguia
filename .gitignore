@@ -45,3 +45,8 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# impeccable (capturas e cache locais; o brief em .impeccable/surfaces vai para o git)
+/.impeccable/review/
+/.impeccable/hook.cache.json
+/.impeccable/config.local.json

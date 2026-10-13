@@ -10,9 +10,17 @@ async function perguntar(page: Page, texto: string) {
 
 const conversa = (page: Page) => page.getByRole("list", { name: "Conversa" });
 
-test("chega pelo catálogo e começa por um exemplo", async ({ page }) => {
+test("pergunta feita no topo da home já chega respondida", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: /Não sabe qual equipamento usar/ }).click();
+  await page.getByLabel("Qual serviço você vai fazer?").fill("vou cortar piso");
+  await page.getByRole("button", { name: "Perguntar ao assistente" }).click();
+  await expect(page).toHaveURL(/\/assistente$/);
+  await expect(conversa(page).getByText("vou cortar piso")).toBeVisible();
+  await expect(conversa(page).getByRole("link", { name: /Cortadora de piso/ })).toBeVisible();
+});
+
+test("começa por um exemplo", async ({ page }) => {
+  await page.goto("/assistente");
   await expect(page.getByRole("heading", { name: "O que você vai fazer?" })).toBeVisible();
 
   await page.getByRole("button", { name: "Quero trocar o piso da sala por porcelanato" }).click();
