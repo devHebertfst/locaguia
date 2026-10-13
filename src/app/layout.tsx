@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Cabin, Inter } from "next/font/google";
 import { Cabecalho } from "@/components/cabecalho";
+import { Rodape } from "@/components/rodape";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-sans",
+const cabin = Cabin({
+  variable: "--font-cabin",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -22,15 +23,22 @@ export const metadata: Metadata = {
     "Aluguel de equipamentos de construção com ajuda para escolher o que você precisa.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#241d17",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${cabin.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      {/* Extensões do navegador (ColorZilla, Grammarly) põem atributos no body
+          antes de o React carregar; isso não deve virar erro de hidratação. */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <Cabecalho />
         {children}
+        <Rodape />
       </body>
     </html>
   );

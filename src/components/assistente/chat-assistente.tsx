@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useEffectEvent, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import Script from "next/script";
-import { ArrowRight, ArrowUp, Package, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUp, ArrowUpRight, LoaderCircle, Package, RotateCcw } from "lucide-react";
 import { perguntarAssistente } from "@/app/assistente/actions";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -57,11 +57,29 @@ export function ChatAssistente() {
   const fimRef = useRef<HTMLDivElement>(null);
   const restaurado = useRef(false);
 
-  // A conversa sobrevive a ir no detalhe de um equipamento e voltar.
+  const enviarPergunta = useEffectEvent((pergunta: string) => enviar(pergunta));
+
+  // A conversa sobrevive a ir no detalhe de um equipamento e voltar. Uma
+  // pergunta vinda do topo da home (?pergunta=) começa uma conversa nova.
   useEffect(() => {
+    const url = new URL(window.location.href);
+    const pergunta = url.searchParams.get("pergunta")?.slice(0, LIMITES_ASSISTENTE.tamanhoMensagem);
+    if (pergunta) {
+      url.searchParams.delete("pergunta");
+      window.history.replaceState(window.history.state, "", url);
+      restaurado.current = true;
+      // Com Turnstile o envio espera o desafio carregar: só preenche o campo.
+      if (TURNSTILE_SITE_KEY) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- a URL só existe no navegador
+        setTexto(pergunta);
+        entradaRef.current?.focus();
+      } else {
+        enviarPergunta(pergunta);
+      }
+      return;
+    }
     try {
       const salvo = sessionStorage.getItem(CHAVE_SESSAO);
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage só existe no navegador
       if (salvo) setItens(JSON.parse(salvo) as Item[]);
     } catch {}
     restaurado.current = true;
@@ -126,7 +144,7 @@ export function ChatAssistente() {
 
       {vazio ? (
         <section aria-labelledby="exemplos" className="flex flex-col gap-3">
-          <h2 id="exemplos" className="text-sm font-medium text-muted-foreground">
+          <h2 id="exemplos" className="text-sm font-medium text-terra-2">
             Toque em um exemplo ou escreva com suas palavras:
           </h2>
           <ul className="grid gap-2 sm:grid-cols-2">
@@ -135,10 +153,10 @@ export function ChatAssistente() {
                 <button
                   type="button"
                   onClick={() => enviar(exemplo)}
-                  className="flex w-full items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3 text-left text-sm transition-colors hover:border-foreground/40"
+                  className="group flex min-h-14 w-full items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 text-left font-medium ring-1 ring-terra/8 transition-[box-shadow,background-color] hover:ring-laranja"
                 >
                   {exemplo}
-                  <ArrowRight aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja"><ArrowRight aria-hidden className="size-4" /></span>
                 </button>
               </li>
             ))}
@@ -157,11 +175,11 @@ export function ChatAssistente() {
         {itens.map((item, i) => (
           <li key={i}>
             {item.papel === "cliente" ? (
-              <p className="ml-auto w-fit max-w-[85%] whitespace-pre-line rounded-2xl rounded-br-sm bg-foreground px-4 py-2.5 text-background">
+              <p className="ml-auto w-fit max-w-[85%] whitespace-pre-line rounded-2xl rounded-br-md bg-terra px-4 py-3 text-white">
                 {item.texto}
               </p>
             ) : item.papel === "erro" ? (
-              <p role="alert" className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+              <p role="alert" className="rounded-xl bg-white p-4 text-sm text-destructive ring-1 ring-destructive/30">
                 {item.texto}
               </p>
             ) : (
@@ -171,8 +189,8 @@ export function ChatAssistente() {
         ))}
         {pendente && (
           <li aria-label="O assistente está respondendo">
-            <p className="flex w-fit items-center gap-2 rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-muted-foreground">
-              <Sparkles aria-hidden className="size-4 animate-pulse" />
+            <p className="flex w-fit items-center gap-2 rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm text-muted-foreground ring-1 ring-terra/8">
+              <LoaderCircle aria-hidden className="size-4 animate-spin text-laranja-escuro motion-reduce:animate-none" />
               Procurando no catálogo…
             </p>
           </li>
@@ -186,7 +204,7 @@ export function ChatAssistente() {
           e.preventDefault();
           enviar(texto);
         }}
-        className="sticky bottom-0 -mx-4 mt-auto flex flex-col gap-2 border-t bg-background/95 px-4 pb-4 pt-3 backdrop-blur"
+        className="sticky bottom-0 -mx-4 mt-auto flex flex-col gap-2 bg-concreto px-4 pt-3 pb-4 sm:-mx-6 sm:px-6"
       >
         {TURNSTILE_SITE_KEY && vazio && (
           <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-language="pt-br" data-size="flexible" />
@@ -209,9 +227,9 @@ export function ChatAssistente() {
             rows={1}
             maxLength={LIMITES_ASSISTENTE.tamanhoMensagem}
             placeholder={vazio ? "Ex.: vou reformar o banheiro e trocar o azulejo" : "Escreva sua resposta…"}
-            className="field-sizing-content max-h-40 min-h-11 flex-1 resize-none rounded-xl border border-input bg-transparent px-3 py-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="field-sizing-content max-h-40 min-h-12 flex-1 resize-none rounded-3xl border border-input bg-white px-4 py-3 text-base outline-none placeholder:text-[#6b655f] focus-visible:border-laranja-escuro focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-laranja/35"
           />
-          <Button type="submit" size="icon" className="size-11 rounded-xl" disabled={pendente || !texto.trim()} aria-label="Enviar">
+          <Button type="submit" size="icon-lg" disabled={pendente || !texto.trim()} aria-label="Enviar">
             <ArrowUp aria-hidden />
           </Button>
         </div>
@@ -231,7 +249,7 @@ function Resposta({
 
   return (
     <article className="flex flex-col gap-4">
-      <p className="w-fit max-w-[95%] whitespace-pre-line rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5">
+      <p className="w-fit max-w-[95%] whitespace-pre-line rounded-2xl rounded-bl-md bg-white px-4 py-3 ring-1 ring-terra/8">
         {resposta.mensagem}
       </p>
 
@@ -253,7 +271,7 @@ function Resposta({
               servico: resposta.servicoResumo,
               materiais,
             })}
-            className={buttonVariants({ size: "lg", className: "h-11 w-full sm:w-fit" })}
+            className={buttonVariants({ size: "lg", className: "w-full sm:w-fit" })}
           >
             {recomendados.length === 1
               ? "Pedir orçamento deste equipamento"
@@ -267,14 +285,14 @@ function Resposta({
       )}
 
       {materiais.length > 0 && tipo !== "pergunta" && (
-        <section className="rounded-xl border border-dashed p-4">
+        <section className="rounded-xl bg-pessego/70 p-4 sm:p-5">
           <h3 className="flex items-center gap-2 text-sm font-medium">
-            <Package aria-hidden className="size-4 text-muted-foreground" />
+            <Package aria-hidden className="size-4 text-laranja-escuro" />
             Materiais que você provavelmente vai comprar
           </h3>
-          <ul className="mt-2 grid gap-x-4 gap-y-1 text-sm text-muted-foreground sm:grid-cols-2">
+          <ul className="mt-2 grid gap-x-4 gap-y-1 text-sm text-terra-2 sm:grid-cols-2">
             {materiais.map((m) => (
-              <li key={m} className="before:mr-2 before:content-['•']">
+              <li key={m} className="flex items-baseline gap-2 before:size-1.5 before:shrink-0 before:translate-y-[-0.15em] before:rounded-full before:bg-laranja-escuro before:content-['']">
                 {m}
               </li>
             ))}
@@ -284,7 +302,7 @@ function Resposta({
 
       {indisponiveis.length > 0 && (
         <section className="flex flex-col gap-2">
-          <h3 className="text-sm font-medium text-muted-foreground">
+          <h3 className="text-sm font-medium text-terra-2">
             Também serviria, mas está indisponível no momento:
           </h3>
           <ul className="flex flex-col gap-2">
@@ -296,7 +314,7 @@ function Resposta({
       )}
 
       {tipo === "sem_equipamento" && (
-        <div className="flex flex-col gap-2 rounded-xl border p-4 text-sm">
+        <div className="flex flex-col gap-2 rounded-xl bg-white p-4 text-sm ring-1 ring-terra/8">
           <p>
             {resposta.equipamentoFaltante
               ? `Não temos "${resposta.equipamentoFaltante}" para alugar agora.`
@@ -325,13 +343,18 @@ function CartaoRecomendado({ item, indisponivel }: { item: ItemRecomendado; indi
       <Link
         href={`/equipamentos/${item.id}`}
         className={cn(
-          "flex flex-col gap-1 rounded-xl border bg-card p-4 transition-colors hover:border-foreground/40",
-          indisponivel && "bg-muted/40 opacity-80",
+          "group flex items-start justify-between gap-4 rounded-xl bg-white p-4 ring-1 ring-terra/8 transition-shadow hover:ring-laranja",
+          indisponivel && "bg-white/60 text-terra-2",
         )}
       >
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{item.categoria}</span>
-        <span className="font-semibold">{item.nome}</span>
-        {item.motivo && <span className="text-sm text-muted-foreground">{item.motivo}</span>}
+        <span className="flex flex-col gap-1">
+          <span className="font-heading text-lg font-semibold">{item.nome}</span>
+          <span className="text-sm font-medium text-laranja-escuro">{item.categoria}</span>
+          {item.motivo && <span className="text-sm text-muted-foreground">{item.motivo}</span>}
+        </span>
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja">
+          <ArrowUpRight aria-hidden className="size-4" />
+        </span>
       </Link>
     </li>
   );

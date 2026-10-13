@@ -73,30 +73,30 @@ export function FormularioOrcamento({
   const erros = estado.status === "erro" ? (estado.erros ?? {}) : {};
 
   return (
-    <form action={acao} noValidate className="flex flex-col gap-8">
+    <form action={acao} noValidate className="flex flex-col gap-4">
       {turnstileSiteKey && (
         <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
       )}
 
       {estado.status === "erro" && estado.mensagem && (
-        <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+        <p role="alert" className="rounded-xl bg-white p-4 text-sm font-medium text-destructive ring-1 ring-destructive/40">
           {estado.mensagem}
         </p>
       )}
 
-      <fieldset className="flex flex-col gap-3">
-        <legend className="mb-3 text-lg font-semibold">Equipamentos</legend>
+      <fieldset className="flex flex-col gap-3 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+        <legend className="float-left mb-2 w-full font-heading text-2xl font-semibold">Equipamentos</legend>
         {selecionados.length > 0 ? (
           <ul className="flex flex-col gap-2">
             {selecionados.map((id) => {
               const equipamento = porId.get(id);
               if (!equipamento) return null;
               return (
-                <li key={id} className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2">
+                <li key={id} className="flex items-center justify-between gap-3 rounded-xl bg-concreto py-2 pr-2 pl-4">
                   <input type="hidden" name="equipamentos" value={id} />
                   <span className="min-w-0">
                     <span className="block truncate font-medium">{equipamento.nome}</span>
-                    <span className="block text-xs text-muted-foreground">{equipamento.categoria}</span>
+                    <span className="block text-xs font-medium text-laranja-escuro">{equipamento.categoria}</span>
                   </span>
                   <Button
                     type="button"
@@ -124,7 +124,7 @@ export function FormularioOrcamento({
               onChange={(e) => e.target.value && setSelecionados((s) => [...s, e.target.value])}
               aria-invalid={Boolean(erros.equipamentos)}
               aria-describedby={erros.equipamentos ? "erro-equipamentos" : undefined}
-              className="h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive"
+              className="h-11 w-full rounded-xl border border-input bg-white px-3.5 text-base outline-none focus-visible:border-laranja-escuro focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-laranja/35 aria-invalid:border-destructive md:text-sm"
             >
               <option value="">Escolha na lista…</option>
               {restantesPorCategoria.map(([categoria, itens]) => (
@@ -142,8 +142,8 @@ export function FormularioOrcamento({
         <Erro id="erro-equipamentos" mensagem={erros.equipamentos} />
       </fieldset>
 
-      <fieldset className="flex flex-col gap-4">
-        <legend className="mb-3 text-lg font-semibold">Serviço e período</legend>
+      <fieldset className="flex flex-col gap-4 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+        <legend className="float-left mb-2 w-full font-heading text-2xl font-semibold">Serviço e período</legend>
         <Campo id="servico" rotulo="O que você vai fazer?" erro={erros.servico}>
           <Textarea
             id="servico"
@@ -158,9 +158,9 @@ export function FormularioOrcamento({
           />
         </Campo>
         {materiais.length > 0 && (
-          <div className="rounded-lg bg-muted/60 p-3 text-sm">
+          <div className="rounded-xl bg-pessego/70 p-4 text-sm">
             <p className="font-medium">Materiais sugeridos pelo assistente</p>
-            <ul className="mt-1 list-disc pl-5 text-muted-foreground">
+            <ul className="mt-1 list-disc pl-5 text-terra-2 marker:text-laranja-escuro">
               {materiais.map((m) => (
                 <li key={m}>
                   {m}
@@ -182,7 +182,7 @@ export function FormularioOrcamento({
                 setDataInicio(e.target.value);
                 if (dataFim && e.target.value > dataFim) setDataFim(e.target.value);
               }}
-              className="h-10"
+
               aria-invalid={Boolean(erros.dataInicio)}
               aria-describedby={erros.dataInicio ? "erro-dataInicio" : undefined}
             />
@@ -195,7 +195,7 @@ export function FormularioOrcamento({
               min={dataInicio || hoje}
               value={dataFim}
               onChange={(e) => setDataFim(e.target.value)}
-              className="h-10"
+
               aria-invalid={Boolean(erros.dataFim)}
               aria-describedby={erros.dataFim ? "erro-dataFim" : undefined}
             />
@@ -203,8 +203,8 @@ export function FormularioOrcamento({
         </div>
       </fieldset>
 
-      <fieldset className="flex flex-col gap-4">
-        <legend className="mb-3 text-lg font-semibold">Seus dados</legend>
+      <fieldset className="flex flex-col gap-4 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+        <legend className="float-left mb-2 w-full font-heading text-2xl font-semibold">Seus dados</legend>
         <Campo id="nome" rotulo="Nome" erro={erros.nome}>
           <Input
             id="nome"
@@ -213,7 +213,7 @@ export function FormularioOrcamento({
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             maxLength={LIMITES.nome.max}
-            className="h-10"
+
             aria-invalid={Boolean(erros.nome)}
             aria-describedby={erros.nome ? "erro-nome" : undefined}
           />
@@ -228,7 +228,7 @@ export function FormularioOrcamento({
             placeholder="(11) 91234-5678"
             value={telefone}
             onChange={(e) => setTelefone(mascararCelular(e.target.value))}
-            className="h-10"
+
             aria-invalid={Boolean(erros.telefone)}
             aria-describedby={erros.telefone ? "erro-telefone" : undefined}
           />
@@ -239,7 +239,7 @@ export function FormularioOrcamento({
             name="aceitaWhatsapp"
             checked={aceitaWhatsapp}
             onChange={(e) => setAceitaWhatsapp(e.target.checked)}
-            className="mt-0.5 size-4 accent-foreground"
+            className="mt-0.5 size-5 shrink-0 accent-[#a9550a]"
           />
           <span>
             Aceito receber avisos sobre este pedido no WhatsApp, por exemplo se um equipamento deixar de
@@ -253,7 +253,7 @@ export function FormularioOrcamento({
       )}
 
       <div className="flex flex-col gap-2">
-        <Button type="submit" size="lg" className="h-11 w-full sm:w-auto" disabled={enviando}>
+        <Button type="submit" size="lg" className="w-full sm:w-fit" disabled={enviando}>
           {enviando ? "Enviando…" : "Pedir orçamento"}
         </Button>
         <p className="text-xs text-muted-foreground">
@@ -295,10 +295,10 @@ function Erro({ id, mensagem }: { id: string; mensagem?: string }) {
 
 function Confirmacao({ codigo, linkWhatsapp }: { codigo: string; linkWhatsapp?: string }) {
   return (
-    <section aria-live="polite" className="flex flex-col items-start gap-4 rounded-xl border p-6">
-      <CheckCircle2 aria-hidden className="size-8 text-emerald-600" />
+    <section aria-live="polite" className="flex flex-col items-start gap-4 rounded-2xl bg-white p-6 ring-1 ring-terra/8 sm:p-8">
+      <CheckCircle2 aria-hidden className="size-10 text-[#1d8a3a]" />
       <div className="flex flex-col gap-1">
-        <h2 className="text-xl font-semibold">Pedido registrado</h2>
+        <h2 className="text-3xl font-semibold">Pedido registrado</h2>
         <p className="text-muted-foreground">
           Código do pedido: <strong className="font-mono text-foreground">{codigo}</strong>
         </p>
@@ -310,7 +310,7 @@ function Confirmacao({ codigo, linkWhatsapp }: { codigo: string; linkWhatsapp?: 
             href={linkWhatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-11 items-center gap-2 rounded-lg bg-[#1f8f4e] px-5 font-medium text-white hover:bg-[#1a7a43]"
+            className="inline-flex h-12 items-center gap-2 rounded-full bg-[#1f8f4e] px-6 font-semibold text-white transition-colors hover:bg-[#1a7a43]"
           >
             <MessageCircle aria-hidden className="size-5" />
             Enviar pelo WhatsApp

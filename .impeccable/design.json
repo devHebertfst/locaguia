@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-13T20:00:00-03:00",
+  "title": "Design System: LocaGuia",
+  "extensions": {
+    "colorMeta": {
+      "terra": { "role": "secondary", "displayName": "Terra", "canonical": "#241d17", "tonalRamp": ["#120d09", "#241d17", "#3a312a", "#54493f", "#736759", "#998d80", "#c4bab0", "#ede8e3"] },
+      "terra-2": { "role": "secondary", "displayName": "Graphite", "canonical": "#443f3b", "tonalRamp": ["#1a1715", "#2e2a27", "#443f3b", "#5d5752", "#7b7570", "#a19c97", "#c9c5c1", "#eceae8"] },
+      "concreto": { "role": "neutral", "displayName": "Concrete", "canonical": "#eeeeee", "tonalRamp": ["#1f1f1f", "#383838", "#555555", "#777777", "#9b9b9b", "#c2c2c2", "#e2e1df", "#eeeeee"] },
+      "laranja": { "role": "primary", "displayName": "Signal Orange", "canonical": "#f1933c", "tonalRamp": ["#3d1d02", "#6b3505", "#a9550a", "#c9680e", "#e47f22", "#f1933c", "#f8bd86", "#ffdebf"] },
+      "laranja-forte": { "role": "primary", "displayName": "Pressed Orange", "canonical": "#e47f22" },
+      "laranja-escuro": { "role": "primary", "displayName": "Rust Text Orange", "canonical": "#a9550a" },
+      "laranja-queimado": { "role": "primary", "displayName": "Burnt Orange", "canonical": "#c9680e" },
+      "pessego": { "role": "tertiary", "displayName": "Peach", "canonical": "#ffdebf", "tonalRamp": ["#4a2a0d", "#7a4b1f", "#a8784a", "#d1a274", "#f0c79e", "#ffdebf", "#fbe7d3", "#fff4ea"] },
+      "pessego-campo": { "role": "tertiary", "displayName": "Peach Field", "canonical": "#fff4ea" },
+      "pessego-quadro": { "role": "tertiary", "displayName": "Peach Frame", "canonical": "#fbe7d3" },
+      "areia": { "role": "neutral", "displayName": "Sand", "canonical": "#c9c1b8" },
+      "branco": { "role": "neutral", "displayName": "White", "canonical": "#ffffff" },
+      "texto-no-terra": { "role": "neutral", "displayName": "Text on Terra", "canonical": "#f6f1ec" },
+      "texto-suave": { "role": "neutral", "displayName": "Soft Text", "canonical": "#575655" },
+      "placeholder": { "role": "neutral", "displayName": "Placeholder", "canonical": "#6b655f" },
+      "borda": { "role": "neutral", "displayName": "Hairline", "canonical": "#dadad9" },
+      "borda-campo": { "role": "neutral", "displayName": "Field Stroke", "canonical": "#8c8782" },
+      "destrutivo": { "role": "neutral", "displayName": "Destructive", "canonical": "#c42b1c" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Home hero headline only; page-title bands use the same voice at clamp(2rem, 5vw, 3.5rem), line-height 1.04." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings, detail-page equipment name, closing band." },
+      "title": { "displayName": "Title", "purpose": "Card names, FAQ questions, fieldset legends, step titles." },
+      "body": { "displayName": "Body", "purpose": "All running text, 52-62ch." },
+      "lede": { "displayName": "Lede", "purpose": "Hero and page-title subtitles on terra, white at 75%." },
+      "label": { "displayName": "Label", "purpose": "Buttons (600), nav, chips, field labels, category text. Sentence case." }
+    },
+    "shadows": [
+      { "name": "signal-glow", "value": "0 6px 16px -8px rgb(201 104 14 / 0.7)", "purpose": "Under every primary orange button." },
+      { "name": "card-rest", "value": "0 1px 2px rgb(36 29 23 / 0.06)", "purpose": "Equipment card at rest." },
+      { "name": "card-lift", "value": "0 18px 40px -20px rgb(36 29 23 / 0.35)", "purpose": "Equipment card on hover, with a -2px translate." },
+      { "name": "field-float", "value": "0 24px 60px -24px rgb(0 0 0 / 0.7)", "purpose": "The hero question field on terra." }
+    ],
+    "motion": [
+      { "name": "control", "value": "200ms ease-out", "purpose": "Button color, border, glow and 1px press." },
+      { "name": "reveal", "value": "300ms ease-out", "purpose": "Card lift, nav underline scale, card-name underline, FAQ disc rotation." },
+      { "name": "photo-zoom", "value": "500ms ease-out", "purpose": "Card photo scales to 1.03 on hover." },
+      { "name": "scene-fade", "value": "700ms", "purpose": "Mixer canvas fades in once rendered." },
+      { "name": "mix-handoff", "value": "450ms", "purpose": "Delay before navigating to the assistant while the drum speeds up; 0 under reduced motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Signal Orange pill with terra text for every primary action.",
+      "html": "<button class=\"ds-btn-primary\">Perguntar ao assistente <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 24px; border: 1px solid transparent; border-radius: 9999px; background: #f1933c; color: #241d17; font-family: Inter, system-ui, sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 16px -8px rgb(201 104 14 / 0.7); transition: background-color 200ms ease-out, translate 200ms ease-out; } .ds-btn-primary:hover { background: #e47f22; } .ds-btn-primary:focus-visible { outline: 2px solid #c9680e; outline-offset: 2px; } .ds-btn-primary:active { translate: 0 1px; }"
+    },
+    {
+      "name": "Terra Button",
+      "kind": "button",
+      "refersTo": "button-terra",
+      "description": "Strong secondary action: search submit, sign-in, action on the orange band.",
+      "html": "<button class=\"ds-btn-terra\">Buscar</button>",
+      "css": ".ds-btn-terra { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border: 1px solid transparent; border-radius: 9999px; background: #241d17; color: #fff; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 200ms ease-out; } .ds-btn-terra:hover { background: #443f3b; } .ds-btn-terra:focus-visible { outline: 2px solid #c9680e; outline-offset: 2px; } .ds-btn-terra:active { translate: 0 1px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Quiet pill with a terra ring.",
+      "html": "<button class=\"ds-btn-outline\">Pedir orçamento</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border: 1px solid rgb(36 29 23 / 0.25); border-radius: 9999px; background: transparent; color: #241d17; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 200ms ease-out, border-color 200ms ease-out; } .ds-btn-outline:hover { border-color: #241d17; background: #eeeeee; } .ds-btn-outline:focus-visible { outline: 2px solid #c9680e; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "White field, 15px radius, rust border and orange ring on focus.",
+      "html": "<input class=\"ds-input\" placeholder=\"Seu nome\" />",
+      "css": ".ds-input { height: 44px; width: 280px; padding: 4px 14px; border: 1px solid #8c8782; border-radius: 15px; background: #fff; color: #241d17; font-family: Inter, system-ui, sans-serif; font-size: 16px; outline: none; transition: border-color 150ms, box-shadow 150ms; } .ds-input::placeholder { color: #575655; } .ds-input:focus-visible { border-color: #a9550a; box-shadow: 0 0 0 3px rgb(241 147 60 / 0.35); }"
+    },
+    {
+      "name": "Search Pill",
+      "kind": "input",
+      "refersTo": "search-pill",
+      "description": "Catalog search: white pill that turns peach on focus, terra submit inside.",
+      "html": "<form class=\"ds-search\" role=\"search\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#575655\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input class=\"ds-search-input\" placeholder=\"Ex.: serra, piso, concreto\" /><button class=\"ds-search-btn\" type=\"button\">Buscar</button></form>",
+      "css": ".ds-search { display: flex; align-items: center; gap: 6px; width: 420px; padding: 6px 6px 6px 12px; border-radius: 9999px; background: #fff; box-shadow: 0 0 0 1px rgb(36 29 23 / 0.15); transition: box-shadow 150ms, background-color 150ms; } .ds-search:focus-within { background: #fff4ea; box-shadow: 0 0 0 2px #a9550a; } .ds-search-input { flex: 1; min-width: 0; height: 40px; padding: 0 4px; border: 0; background: transparent; color: #241d17; font-family: Inter, system-ui, sans-serif; font-size: 16px; outline: none; } .ds-search-input::placeholder { color: #6b655f; } .ds-search-btn { height: 40px; padding: 0 20px; border: 0; border-radius: 9999px; background: #241d17; color: #fff; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; } .ds-search-btn:hover { background: #443f3b; }"
+    },
+    {
+      "name": "Category Chips",
+      "kind": "chip",
+      "refersTo": "chip-category",
+      "description": "Filter pills; active is solid terra.",
+      "html": "<div class=\"ds-chips\"><a class=\"ds-chip ds-chip-active\" href=\"#\">Todas</a><a class=\"ds-chip\" href=\"#\">Concretagem</a><a class=\"ds-chip\" href=\"#\">Corte</a></div>",
+      "css": ".ds-chips { display: flex; gap: 8px; } .ds-chip { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 9999px; background: #fff; color: #443f3b; box-shadow: 0 0 0 1px rgb(36 29 23 / 0.12); font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 500; text-decoration: none; transition: box-shadow 150ms, background-color 150ms; } .ds-chip:hover { box-shadow: 0 0 0 1px rgb(36 29 23 / 0.4); } .ds-chip:focus-visible { outline: 2px solid #c9680e; outline-offset: 2px; } .ds-chip-active, .ds-chip-active:hover { background: #241d17; color: #fff; box-shadow: none; }"
+    },
+    {
+      "name": "Equipment Card",
+      "kind": "card",
+      "refersTo": "card-equipment",
+      "description": "Catalog card: photo, Cabin name, rust category below, seal, concrete quote bar.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-photo\"><svg viewBox=\"0 0 48 48\" width=\"56\" height=\"56\" aria-hidden=\"true\"><path d=\"M14 34 31 17m-4-6 10 10m-3-13 4 4a3 3 0 0 1 0 4.2l-3.6 3.6-8.2-8.2 3.6-3.6a3 3 0 0 1 4.2 0ZM14 34l-3.5 3.5a2.5 2.5 0 0 1-3.5-3.5L10.5 30.5 14 34Z\" fill=\"none\" stroke=\"rgb(169 85 10 / 0.7)\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></div><div class=\"ds-card-body\"><h3 class=\"ds-card-name\">Betoneira 400 L</h3><span class=\"ds-card-cat\">Concretagem</span><span class=\"ds-card-desc\">Mistura concreto e argamassa para obras pequenas e médias.</span><span class=\"ds-seal\"><span class=\"ds-seal-dot\"></span>Disponível</span></div><a class=\"ds-card-cta\" href=\"#\">Pedir orçamento<span class=\"ds-card-disc\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7\"/><path d=\"M7 7h10v10\"/></svg></span></a></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; width: 300px; padding: 12px; border-radius: 15px; background: #fff; box-shadow: 0 1px 2px rgb(36 29 23 / 0.06), 0 0 0 1px rgb(36 29 23 / 0.08); font-family: Inter, system-ui, sans-serif; color: #241d17; transition: box-shadow 300ms ease-out, translate 300ms ease-out; } .ds-card:hover { translate: 0 -2px; box-shadow: 0 18px 40px -20px rgb(36 29 23 / 0.35), 0 0 0 1px rgb(36 29 23 / 0.08); } .ds-card-photo { display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 3; border-radius: 12px; background: #fbe7d3; } .ds-card-body { display: flex; flex-direction: column; gap: 6px; padding: 16px 6px 0; } .ds-card-name { margin: 0; font-family: Cabin, system-ui, sans-serif; font-size: 20px; font-weight: 600; line-height: 1.375; } .ds-card-cat { font-size: 14px; font-weight: 500; color: #a9550a; } .ds-card-desc { font-size: 14px; color: #575655; } .ds-seal { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 12px; font-weight: 500; color: #1d6b34; } .ds-seal-dot { width: 6px; height: 6px; border-radius: 9999px; background: #20bd3c; } .ds-card-cta { display: flex; align-items: center; justify-content: space-between; height: 40px; margin: 16px 6px 2px; padding: 0 6px 0 16px; border-radius: 9999px; background: #eeeeee; color: #241d17; font-size: 14px; font-weight: 600; text-decoration: none; transition: background-color 150ms; } .ds-card-cta:hover { background: #f1933c; } .ds-card-cta:focus-visible { outline: 2px solid #c9680e; outline-offset: 2px; } .ds-card-disc { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 9999px; background: #241d17; color: #fff; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "Terra bar, logo mark, white links with an orange underline on the current page, Orçamento pill.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-nav-brand\"><svg viewBox=\"0 0 32 32\" width=\"28\" height=\"28\" aria-hidden=\"true\"><path d=\"M6.5 22.5c-2.6-4.4-1.3-10.6 3.4-14.1l5.6-4.1c1.2-.9 2.9-.6 3.7.6l7.3 10.7c.8 1.2.5 2.9-.7 3.7l-5.7 3.9c-4.8 3.3-11 2.2-13.6-.7Z\" fill=\"#f1933c\"/><path d=\"m11.2 9.6 8.6 12.6M15.2 6.8l8.6 12.6\" stroke=\"#241d17\" stroke-width=\"1.6\" stroke-linecap=\"round\" opacity=\".55\"/><path d=\"M5 27.5h22\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>Loca<span class=\"ds-nav-accent\">Guia</span></span><nav class=\"ds-nav-links\"><a class=\"ds-nav-link\" aria-current=\"page\" href=\"#\">Catálogo</a><a class=\"ds-nav-link\" href=\"#\">Assistente</a><a class=\"ds-nav-cta\" href=\"#\">Orçamento</a></nav></header>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 24px; background: #241d17; color: #f6f1ec; border-bottom: 1px solid rgb(255 255 255 / 0.1); font-family: Inter, system-ui, sans-serif; } .ds-nav-brand { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-family: Cabin, system-ui, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.025em; } .ds-nav-accent { color: #f1933c; } .ds-nav-links { display: flex; align-items: center; gap: 8px; font-size: 14px; } .ds-nav-link { position: relative; padding: 8px 12px; color: rgb(255 255 255 / 0.75); font-weight: 500; text-decoration: none; transition: color 150ms; } .ds-nav-link:hover, .ds-nav-link[aria-current=page] { color: #fff; } .ds-nav-link::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 2px; border-radius: 9999px; background: #f1933c; transform: scaleX(0); transform-origin: left; transition: transform 300ms; } .ds-nav-link[aria-current=page]::after, .ds-nav-link:hover::after { transform: scaleX(1); } .ds-nav-link:focus-visible, .ds-nav-cta:focus-visible { outline: 2px solid #f1933c; outline-offset: 2px; } .ds-nav-cta { display: inline-flex; align-items: center; height: 36px; margin-left: 4px; padding: 0 16px; border-radius: 9999px; background: #f1933c; color: #241d17; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 6px 16px -8px rgb(201 104 14 / 0.7); } .ds-nav-cta:hover { background: #e47f22; }"
+    },
+    {
+      "name": "Hero Question Field",
+      "kind": "custom",
+      "refersTo": "hero-field",
+      "description": "Peach pill floating on terra; the customer types the job and the mixer speeds up.",
+      "html": "<div class=\"ds-hero\"><label class=\"ds-hero-label\" for=\"ds-hero-q\">Qual serviço você vai fazer?</label><div class=\"ds-hero-field\"><input id=\"ds-hero-q\" class=\"ds-hero-input\" placeholder=\"Ex.: vou reformar o banheiro\" /><button class=\"ds-hero-btn\" type=\"button\">Perguntar ao assistente</button></div><div class=\"ds-hero-examples\"><a class=\"ds-hero-ex\" href=\"#\">Trocar o piso da sala</a><a class=\"ds-hero-ex\" href=\"#\">Fazer uma calçada</a></div></div>",
+      "css": ".ds-hero { display: flex; flex-direction: column; gap: 12px; padding: 32px; background: #241d17; font-family: Inter, system-ui, sans-serif; } .ds-hero-label { color: rgb(255 255 255 / 0.9); font-size: 14px; font-weight: 500; } .ds-hero-field { display: flex; align-items: center; gap: 8px; max-width: 576px; padding: 8px; border-radius: 9999px; background: #fff4ea; box-shadow: 0 24px 60px -24px rgb(0 0 0 / 0.7); transition: box-shadow 150ms; } .ds-hero-field:focus-within { box-shadow: 0 0 0 4px #ffdebf, 0 24px 60px -24px rgb(0 0 0 / 0.7); } .ds-hero-input { flex: 1; min-width: 0; height: 48px; padding: 0 16px; border: 0; background: transparent; color: #241d17; font-size: 16px; outline: none; } .ds-hero-input::placeholder { color: #6b655f; } .ds-hero-btn { height: 48px; padding: 0 24px; border: 0; border-radius: 9999px; background: #f1933c; color: #241d17; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 16px -8px rgb(201 104 14 / 0.7); } .ds-hero-btn:hover { background: #e47f22; } .ds-hero-examples { display: flex; flex-wrap: wrap; gap: 8px; } .ds-hero-ex { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border: 1px solid rgb(255 255 255 / 0.2); border-radius: 9999px; color: rgb(255 255 255 / 0.8); font-size: 14px; text-decoration: none; transition: border-color 150ms, color 150ms; } .ds-hero-ex:hover { border-color: #f1933c; color: #fff; } .ds-hero-ex:focus-visible { outline: 2px solid #f1933c; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Job-Site Mixer",
+    "overview": "LocaGuia is a construction site seen at dusk: a near-black earth-brown ground (terra) carries the header, page bands and footer, and against it a signal-orange works like site signage. Below the brown, the body opens into white and concrete-grey bands where the catalog, forms and answers live. The world is a translation of the Bolduzer rental reference into one small shop's voice: warm, physical, plain-spoken, and built for someone on a phone with dust on their hands.\n\nDensity is relaxed but not airy. Content sits in a 1280px column with generous section bands; cards and panels are white on concrete with hairline rings rather than heavy borders. Everything a customer can press is a pill, like a road sign or a hard-hat sticker. Soft peach fields mark where the customer types or where the assistant adds something extra. The signature is a procedural three.js concrete mixer in the home hero whose drum turns slowly, can be dragged, and speeds up when a job is sent in: the request goes \"into the mixer\" and comes out as equipment.\n\nThe build rejects the stock rental-shop hero (excavator photo, \"Alugue já\", service cards) and the small uppercase kicker above headings. Category is information about the equipment, so it sits under the name in sentence case or as a pill on the detail page.",
+    "keyCharacteristics": [
+      "Terra ground on top and bottom (header, page-title bands, hero, footer); white and concrete body between.",
+      "Signal orange with dark terra text on every primary action; never white on orange.",
+      "Cabin 500 display headings with tight tracking; Inter for everything read.",
+      "Pills for every control, 15px cards, 20px panels and bands.",
+      "Flat surfaces with hairline terra rings; shadow appears on hover or under the hero field.",
+      "One 3D signature, decorative and optional, that yields to reduced motion and weak hardware."
+    ],
+    "rules": [
+      { "name": "The Dark-On-Orange Rule", "body": "Text on Signal Orange is always terra. The Bolduzer reference uses white; that fails contrast here, and the build translated it deliberately.", "section": "colors" },
+      { "name": "The Two Oranges Rule", "body": "Signal Orange is for fills and display-size type; anything orange at 14px on white uses Rust Text Orange.", "section": "colors" },
+      { "name": "The Terra Ground Rule", "body": "Terra is a ground, not a card. It runs edge to edge as header, hero, page-title band and footer; inside the body it appears only at control scale (terra button, active chip, chat bubble).", "section": "colors" },
+      { "name": "The No-Kicker Rule", "body": "Nothing small, uppercase and tracked sits above a heading. Category goes below the name in sentence case (Rust Text Orange, 14px 500) or in a pill beside the availability seal on the detail page.", "section": "typography" },
+      { "name": "The Medium Display Rule", "body": "Display and headline Cabin stay at weight 500; 600 is reserved for title-size type, and the logotype alone uses 700.", "section": "typography" },
+      { "name": "The Ring-Not-Border Rule", "body": "Containers on light grounds use a 1px terra ring at low opacity (8% at rest, up to 20-40% for open or hovered), not a grey border.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** put terra text on every Signal Orange fill (The Dark-On-Orange Rule).",
+      "**Do** use Rust Text Orange (laranja-escuro) for any orange text at body or label size on white or concrete.",
+      "**Do** open every inner page with a terra page-title band continuing the header, and close every page with the terra footer.",
+      "**Do** make every pressable control a full pill; keep cards at 15px and panels at 20px.",
+      "**Do** set category under the equipment name in sentence case, Rust Text Orange, 14px 500.",
+      "**Do** separate light containers with a terra ring at 8-15% opacity rather than a grey border.",
+      "**Do** use Peach Field or Peach for places where the customer types or the assistant adds context, with Placeholder (#6b655f) as placeholder text on peach.",
+      "**Do** keep any motion decorative and stoppable: honor `prefers-reduced-motion`, and keep heavy scenes lazy-loaded, paused off-screen and capped at 30fps when idle."
+    ],
+    "donts": [
+      "**Don't** put white text on Signal Orange.",
+      "**Don't** add a small uppercase kicker or eyebrow above headings.",
+      "**Don't** set display or headline Cabin heavier than 500.",
+      "**Don't** use terra as a card color inside light sections; it is a ground or a control, never a container.",
+      "**Don't** open with the stock rental hero (equipment photo, \"Alugue já\", service-card row).",
+      "**Don't** add a second 3D or animated signature; the mixer is the one."
+    ]
+  }
+}

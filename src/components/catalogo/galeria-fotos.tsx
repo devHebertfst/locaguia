@@ -14,11 +14,11 @@ export function GaleriaFotos({ fotos, nome }: { fotos: string[]; nome: string })
         src={fotos[atual]}
         alt={fotos.length > 1 ? `${nome}, foto ${atual + 1} de ${fotos.length}` : nome}
         sizes="(min-width: 768px) 50vw, 100vw"
-        className="rounded-xl"
+        className="rounded-2xl"
         priority
       />
       {fotos.length > 1 && (
-        <ul className="flex gap-2 overflow-x-auto">
+        <ul className="flex gap-3 overflow-x-auto p-1">
           {fotos.map((foto, i) => (
             <li key={foto} className="shrink-0">
               <button
@@ -27,8 +27,8 @@ export function GaleriaFotos({ fotos, nome }: { fotos: string[]; nome: string })
                 aria-label={`Ver foto ${i + 1}`}
                 aria-current={i === atual}
                 className={cn(
-                  "relative block size-16 overflow-hidden rounded-md border-2",
-                  i === atual ? "border-foreground" : "border-transparent opacity-70 hover:opacity-100",
+                  "relative block size-16 overflow-hidden rounded-lg ring-2 ring-offset-2 ring-offset-concreto transition",
+                  i === atual ? "ring-laranja-escuro" : "ring-transparent opacity-70 hover:opacity-100",
                 )}
               >
                 <Image src={foto} alt="" fill sizes="64px" className="object-cover" />

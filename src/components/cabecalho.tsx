@@ -1,23 +1,18 @@
+import { Suspense } from "react";
 import Link from "next/link";
+import { Marca } from "./marca";
+import { NavLinks, NavPrincipal } from "./nav-principal";
 
 export function Cabecalho() {
   return (
-    <header className="border-b bg-background">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
-          LocaGuia
+    <header className="chao-terra relative z-20 border-b border-white/10">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
+        <Link href="/" aria-label="LocaGuia, página inicial" className="rounded-md text-white">
+          <Marca compacta />
         </Link>
-        <nav className="flex items-center gap-3 text-sm sm:gap-5">
-          <Link href="/" className="text-muted-foreground hover:text-foreground">
-            Catálogo
-          </Link>
-          <Link href="/assistente" className="text-muted-foreground hover:text-foreground">
-            Assistente
-          </Link>
-          <Link href="/orcamento" className="text-muted-foreground hover:text-foreground">
-            Orçamento
-          </Link>
-        </nav>
+        <Suspense fallback={<NavLinks />}>
+          <NavPrincipal />
+        </Suspense>
       </div>
     </header>
   );

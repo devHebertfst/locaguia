@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: LayoutProps<"/admin">) {
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="border-b bg-muted/40">
-        <div className="mx-auto flex h-12 w-full max-w-6xl items-center justify-between gap-3 px-4 text-sm">
-          <span className="font-medium">Painel da equipe</span>
+    <div className="flex flex-1 flex-col bg-concreto">
+      <div className="border-b border-terra/10 bg-white">
+        <div className="mx-auto flex h-12 w-full max-w-7xl items-center justify-between gap-3 px-4 text-sm sm:px-6">
+          <span className="font-heading font-semibold">Painel da equipe</span>
           <Suspense fallback={null}>
             <ContaLogada />
           </Suspense>
