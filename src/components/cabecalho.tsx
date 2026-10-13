@@ -11,6 +11,9 @@ export function Cabecalho() {
           <Link href="/" className="text-muted-foreground hover:text-foreground">
             Catálogo
           </Link>
+          <Link href="/orcamento" className="text-muted-foreground hover:text-foreground">
+            Pedir orçamento
+          </Link>
         </nav>
       </div>
     </header>
