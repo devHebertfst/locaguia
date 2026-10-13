@@ -2,6 +2,7 @@ import "server-only";
 import { sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { limitesUso } from "@/db/schema";
+import { env } from "@/lib/env";
 
 export type Janela = "hora" | "dia";
 
@@ -24,7 +25,7 @@ export async function consumirLimite(
 ): Promise<boolean> {
   const [linha] = await getDb()
     .insert(limitesUso)
-    .values({ chave, janelaInicio: inicioJanela(agora, janela), contador: 1 })
+    .values({ chave: env.LIMITES_PREFIXO + chave, janelaInicio: inicioJanela(agora, janela), contador: 1 })
     .onConflictDoUpdate({
       target: [limitesUso.chave, limitesUso.janelaInicio],
       set: { contador: sql`${limitesUso.contador} + 1` },

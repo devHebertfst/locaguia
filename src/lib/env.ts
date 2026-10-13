@@ -47,6 +47,9 @@ const esquema = z.object({
   LIMITE_ASSISTENTE_POR_IP_HORA: inteiro(30),
   LIMITE_ASSISTENTE_DIARIO: inteiro(500),
   LIMITE_FORMULARIOS_POR_IP_HORA: inteiro(5),
+  // Prefixo das chaves de limite. Os testes e2e usam "e2e:" para não gastar
+  // o limite de quem está usando o app em desenvolvimento no mesmo banco.
+  LIMITES_PREFIXO: z.string().default(""),
 });
 
 const esquemaComChave = esquema

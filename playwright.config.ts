@@ -33,6 +33,7 @@ export default defineConfig({
       ASSISTENTE_SIMULADO: "1",
       LIMITE_ASSISTENTE_POR_IP_HORA: "1000",
       LIMITE_ASSISTENTE_DIARIO: "100000",
+      LIMITES_PREFIXO: "e2e:",
     },
   },
 });

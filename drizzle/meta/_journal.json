@@ -15,6 +15,13 @@
       "when": 1791857199968,
       "tag": "0001_busca_sem_acento",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791932804058,
+      "tag": "0002_bucket_fotos",
+      "breakpoints": true
     }
   ]
 }
