@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { GaleriaFotos } from "@/components/catalogo/galeria-fotos";
 import { SeloDisponibilidade } from "@/components/catalogo/selo-disponibilidade";
 import { obterEquipamento } from "@/lib/catalogo/consultas";
+import { hrefOrcamento } from "@/lib/orcamento/params";
 
 export async function generateMetadata({
   params,
@@ -53,6 +55,14 @@ async function Detalhe({ id }: { id: string }) {
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{equipamento.nome}</h1>
         <SeloDisponibilidade disponivel={equipamento.disponivel} />
         <p className="whitespace-pre-line leading-relaxed">{equipamento.descricao}</p>
+        {equipamento.disponivel && (
+          <Link
+            href={hrefOrcamento({ equipamentos: [equipamento.id] })}
+            className={buttonVariants({ size: "lg", className: "h-11 w-full sm:w-fit" })}
+          >
+            Pedir orçamento
+          </Link>
+        )}
         <p className="text-sm text-muted-foreground">
           Preço e condições são combinados direto com a locadora no orçamento.
         </p>

@@ -76,6 +76,17 @@ export async function listarCategorias(): Promise<string[]> {
   return linhas.map((l) => l.categoria);
 }
 
+export type OpcaoEquipamento = { id: string; nome: string; categoria: string };
+
+// Equipamentos que podem entrar num pedido de orçamento: ativos e disponíveis.
+export async function listarDisponiveis(): Promise<OpcaoEquipamento[]> {
+  return getDb()
+    .select({ id: equipamentos.id, nome: equipamentos.nome, categoria: equipamentos.categoria })
+    .from(equipamentos)
+    .where(and(eq(equipamentos.ativo, true), eq(equipamentos.disponivel, true)))
+    .orderBy(asc(equipamentos.categoria), asc(equipamentos.nome));
+}
+
 // Detalhe de um equipamento ativo; null se não existir, estiver desativado ou o id for inválido.
 export async function obterEquipamento(id: string): Promise<EquipamentoCatalogo | null> {
   if (!UUID.test(id)) return null;

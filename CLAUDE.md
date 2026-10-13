@@ -16,14 +16,14 @@ npm run lint
 npm run typecheck      # next typegen (route types such as LayoutProps) + tsc
 npm test               # Vitest unit tests (tests/unit)
 npx vitest run tests/unit/env.test.ts   # single test file; add -t "name" for one test
-npm run test:e2e       # Playwright (tests/e2e), starts dev server on :3100
+npm run test:e2e       # Playwright (tests/e2e): production build + `next start` on :3100
 npm run build
 npm run db:generate    # generate a migration in drizzle/ from src/db/schema.ts
 npm run db:migrate     # apply migrations (uses DATABASE_URL_DIRETA)
 npm run db:seed        # example equipment for dev; does nothing if any equipment exists
 ```
 
-The catalog e2e tests expect the seed data. The CI only runs lint, typecheck, unit tests and build, without a DB, so `next build` must never need credentials: get the DB through `getDb()` (`src/db/index.ts`), never at module scope.
+The e2e tests run against the DB in `.env.local` and expect the seed data. They fix some env vars in `playwright.config.ts` (shop WhatsApp, high rate limit, Turnstile off), and tests that write rows use a marker name and delete them in `afterAll`. Next 16 keeps the previous page hidden in the DOM after a client navigation, so scope locators (`getByRole("article")`, the form) instead of searching the whole page. The CI only runs lint, typecheck, unit tests and build, without a DB, so `next build` must never need credentials: get the DB through `getDb()` (`src/db/index.ts`), never at module scope.
 
 Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; every other integration is optional and the app must keep working without it.
 
@@ -54,7 +54,10 @@ The source of truth is `src/db/schema.ts`. Names are Portuguese; keep them. Chan
   1. Save to the DB in a transaction. If this fails, block and show an error.
   2. Email via Resend, if configured. A failure is only logged.
   3. Open `wa.me` for the shop, if `WHATSAPP_LOJA` is set.
-- Phones are Brazilian mobile numbers only, stored as E.164 (`+55DD9XXXXXXXX`).
+- Phones are Brazilian mobile numbers only, stored as E.164 (`+55DD9XXXXXXXX`); see `src/lib/telefone.ts`. Dates are calendar dates in the shop's time zone (`src/lib/datas.ts`).
+- The quote form (`/orcamento`) can be prefilled through the URL: `?equipamentos=id1,id2&servico=...&materiais=...` (`src/lib/orcamento/params.ts`). The assistant uses this to hand over its recommendation. Validation lives in `src/lib/orcamento/validacao.ts` and runs on both the client and the server.
+- Public forms go through Turnstile (skipped when `TURNSTILE_SECRET_KEY` is empty) and `consumirLimite()` (`src/lib/limites.ts`).
+- The customer's consent to WhatsApp notices (`aceita_whatsapp`) must start unchecked.
 - Customers get automatic WhatsApp notices in three cases:
   - **Suggested equipment arrived:** sent when the admin links the suggestion to the new equipment. There is no fuzzy matching.
   - **Equipment is available again:** sent to `aguardar_disponibilidade` suggestions that asked to be notified.

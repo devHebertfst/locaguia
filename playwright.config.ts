@@ -18,9 +18,18 @@ export default defineConfig({
     { name: "celular", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: `npm run dev -- --port ${porta}`,
+    // Build de produção: roda junto com um `next dev` aberto (o Next 16 só
+    // permite um dev server por pasta) e testa o que vai para a Vercel.
+    command: `npm run build && npm run start -- --port ${porta}`,
     url: `http://localhost:${porta}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 300_000,
+    // Valores fixos para os testes (variáveis do processo têm prioridade sobre o .env.local).
+    env: {
+      WHATSAPP_LOJA: "5511900000000",
+      LIMITE_FORMULARIOS_POR_IP_HORA: "1000",
+      TURNSTILE_SECRET_KEY: "",
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "",
+    },
   },
 });
