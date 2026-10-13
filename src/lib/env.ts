@@ -20,7 +20,12 @@ const esquema = z.object({
   NEXT_PUBLIC_SITE_URL: z.url().default("http://localhost:3000"),
 
   GEMINI_API_KEY: opcional,
-  GEMINI_MODEL: z.string().default("gemini-flash-latest"),
+  // Flash Lite: ~1,5 s por resposta, contra 6 a 20 s do Flash, com qualidade parecida.
+  GEMINI_MODEL: z.string().default("gemini-flash-lite-latest"),
+  // Usado quando o modelo principal está sobrecarregado ou falha.
+  GEMINI_MODEL_RESERVA: z.string().default("gemini-flash-latest"),
+  // "1" troca o Gemini por respostas fixas (testes e2e). Nunca use em produção.
+  ASSISTENTE_SIMULADO: opcional,
 
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: opcional,
   TURNSTILE_SECRET_KEY: opcional,

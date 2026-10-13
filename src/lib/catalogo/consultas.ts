@@ -87,6 +87,21 @@ export async function listarDisponiveis(): Promise<OpcaoEquipamento[]> {
     .orderBy(asc(equipamentos.categoria), asc(equipamentos.nome));
 }
 
+// Catálogo enviado ao assistente: todos os ativos, disponíveis primeiro.
+export async function listarParaAssistente() {
+  return getDb()
+    .select({
+      id: equipamentos.id,
+      nome: equipamentos.nome,
+      categoria: equipamentos.categoria,
+      descricao: equipamentos.descricao,
+      disponivel: equipamentos.disponivel,
+    })
+    .from(equipamentos)
+    .where(eq(equipamentos.ativo, true))
+    .orderBy(desc(equipamentos.disponivel), asc(equipamentos.categoria), asc(equipamentos.nome));
+}
+
 // Detalhe de um equipamento ativo; null se não existir, estiver desativado ou o id for inválido.
 export async function obterEquipamento(id: string): Promise<EquipamentoCatalogo | null> {
   if (!UUID.test(id)) return null;

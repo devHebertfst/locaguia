@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { BuscaCatalogo } from "@/components/catalogo/busca-catalogo";
 import { CartaoEquipamento } from "@/components/catalogo/cartao-equipamento";
 import { FiltroCategorias } from "@/components/catalogo/filtro-categorias";
@@ -15,6 +16,21 @@ export default function CatalogoPage({ searchParams }: PageProps<"/">) {
           Encontre o equipamento para o seu serviço e peça um orçamento pelo WhatsApp.
         </p>
       </div>
+      <Link
+        href="/assistente"
+        className="group flex items-center justify-between gap-4 rounded-xl border bg-muted/50 p-4 transition-colors hover:border-foreground/40"
+      >
+        <span className="flex flex-col gap-0.5">
+          <span className="font-medium">Não sabe qual equipamento usar?</span>
+          <span className="text-sm text-muted-foreground">
+            Conte o serviço e o assistente indica os equipamentos e materiais.
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-1 text-sm font-medium">
+          <span className="hidden sm:inline">Perguntar</span>
+          <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </Link>
       <Suspense fallback={<CatalogoCarregando />}>
         <Catalogo searchParams={searchParams} />
       </Suspense>
