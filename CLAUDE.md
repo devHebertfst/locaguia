@@ -2,43 +2,64 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project status
-
-LocaGuia (working name) is pre-implementation: the only source of truth is `docs/spec.md` (Portuguese). No app has been scaffolded yet, so there are no build, lint or test commands. Add them here once the Next.js project exists. Read `docs/spec.md` before making product decisions.
+@AGENTS.md
 
 ## What it is
 
-A single-tenant web app for one small construction-equipment rental shop that sells mainly over WhatsApp. Customers browse a public catalog, describe a job to an AI assistant that recommends equipment from that catalog, and send a quote request that goes to the shop's WhatsApp and email.
+LocaGuia is a single-tenant web app for one small construction-equipment rental shop that sells mainly over WhatsApp. Customers browse a public catalog, describe a job to an AI assistant that recommends equipment from that catalog, and send a quote request. The original product spec is `docs/spec.md` (Portuguese). Decisions made since then, recorded below, override it. All UI text is pt-BR only.
 
-## Planned architecture
+## Commands
 
-- **Next.js App Router** for UI and **Route Handlers** for the backend, deployed on Vercel.
-- **PostgreSQL on Supabase** for data.
-- **Firebase Auth (Google sign-in)** for staff only. Authorization comes from the `usuarios.autorizado` flag, which is matched by `firebase_uid`. Customers never log in.
-- **Resend** sends the email notification for each quote request.
-- **Cloudflare** handles domain and DNS.
-- **LLM API** is called only from the server. Recommendations are limited to the catalog.
+```bash
+npm run dev            # dev server
+npm run lint
+npm run typecheck      # next typegen (route types such as LayoutProps) + tsc
+npm test               # Vitest unit tests (tests/unit)
+npx vitest run tests/unit/env.test.ts   # single test file; add -t "name" for one test
+npm run test:e2e       # Playwright (tests/e2e), starts dev server on :3100
+npm run build
+npm run db:generate    # generate a migration in drizzle/ from src/db/schema.ts
+npm run db:migrate     # apply migrations (uses DATABASE_URL_DIRETA)
+```
 
-Screens: public catalog (list, search, details), AI assistant chat, quote request form (which opens WhatsApp), Google admin login, and an admin panel for equipment CRUD and viewing quote requests.
+Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; every other integration is optional and the app must keep working without it.
 
-## Data model (Portuguese names, keep them)
+## Architecture
 
-- `usuarios`: id, firebase_uid, nome, email, autorizado
-- `equipamentos`: id, nome, descricao, categoria, foto_url, disponivel
-- `solicitacoes`: id, nome_cliente, telefone, servico, periodo, materiais_sugeridos, status, criado_em
-- `solicitacao_equipamentos`: solicitacao_id, equipamento_id (join table)
+- **Next.js 16.4** App Router with `cacheComponents` and `partialPrefetching` on. Middleware is now called Proxy and lives in `src/proxy.ts`. Reads of the DB, cookies or session must sit inside `<Suspense>` or `use cache`, or the build fails. Read `node_modules/next/dist/docs/` before relying on older Next knowledge.
+- **Supabase**: Postgres (through Drizzle, `src/db/`), Storage for equipment photos, and Auth with Google for staff only. Firebase from the spec was replaced. Customers never log in. A Google account that isn't in `usuarios` with `autorizado = true` only sees the public catalog.
+- **Data access is server-only.** The server connects as the DB owner. Every table has RLS on with no policies, so the browser can't read or write anything directly. Check the user's role in every Server Action or Route Handler; the proxy check is only optimistic.
+- Roles: `admin` can do everything, including managing users. `funcionario` manages equipment and quote requests. The first admin is inserted directly into the DB.
+- `src/lib/env.ts` validates env vars lazily on first access, so build and tests run without credentials.
+- Integrations: Gemini for the assistant, Turnstile for anti-spam, Resend for email to the shop, WhatsApp Cloud API for automatic notices to customers, a `wa.me` link to the shop's WhatsApp, and Vercel Cron.
+
+## Data model
+
+The source of truth is `src/db/schema.ts`. Names are Portuguese; keep them. Change the schema, then run `npm run db:generate`; never edit generated SQL by hand except for custom migrations.
+
+- Equipment has two separate states. `disponivel = false` still appears in the catalog, marked as unavailable. `ativo = false` means deactivated: it is hidden from the catalog but kept in old quote requests. Equipment is never hard-deleted.
+- `sugestoes` covers both equipment the shop lacks (`novo_equipamento`) and "notify me when it is available" requests (`aguardar_disponibilidade`).
+- `notificacoes` is an outbox for WhatsApp Cloud API notices. While credentials are missing, rows stay `pendente`.
+- `limites_uso` holds rate-limit counters per key and time window.
 
 ## Hard product rules
 
-- The AI recommends **only** equipment that is in `equipamentos` with `disponivel = true`. Enforce this on the server: filter the catalog before building the prompt and validate the IDs the model returns. Do not rely on the prompt alone.
-- The AI may suggest complementary materials as a plain list. It never looks up prices or stock at other stores.
-- The AI never quotes prices, confirms reservations or claims availability. The shop sets prices and terms during the quote.
-- A quote request (name, WhatsApp number, desired period) does three things: it saves `solicitacoes` and `solicitacao_equipamentos`, opens a structured WhatsApp message to the shop, and sends an email through Resend.
+- The AI recommends **only** equipment with `ativo = true` and `disponivel = true`. Enforce this on the server: send the model only active equipment and drop every ID it returns that isn't active and available. Never rely on the prompt alone.
+- The AI may suggest complementary materials as a plain list. It never quotes prices, confirms reservations or claims availability. The shop sets prices and terms during the quote.
+- Quote requests are processed in this order:
+  1. Save to the DB in a transaction. If this fails, block and show an error.
+  2. Email via Resend, if configured. A failure is only logged.
+  3. Open `wa.me` for the shop, if `WHATSAPP_LOJA` is set.
+- Phones are Brazilian mobile numbers only, stored as E.164 (`+55DD9XXXXXXXX`).
+- Customers get automatic WhatsApp notices in three cases:
+  - **Suggested equipment arrived:** sent when the admin links the suggestion to the new equipment. There is no fuzzy matching.
+  - **Equipment is available again:** sent to `aguardar_disponibilidade` suggestions that asked to be notified.
+  - **Equipment was deactivated:** sent to open quote requests (`nova` or `em_atendimento`) whose customer consented.
 
 ## Out of scope for the MVP (do not build)
 
 Multi-tenancy, SaaS billing, online payments, automatic pricing, integrations with material stores, finance or invoicing, digital contracts, reservations or a rental calendar, maintenance tracking, delivery, customer accounts, a native mobile app, and integrations with existing management systems.
 
-## Success metric
+## Workflow
 
-At least 5 real, qualified quote requests in 30 days, each with contact info, the desired job and the requested equipment.
+Every change goes on its own branch with a PR to `main`. Never commit feature work directly to `main`.
