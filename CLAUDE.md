@@ -20,7 +20,10 @@ npm run test:e2e       # Playwright (tests/e2e), starts dev server on :3100
 npm run build
 npm run db:generate    # generate a migration in drizzle/ from src/db/schema.ts
 npm run db:migrate     # apply migrations (uses DATABASE_URL_DIRETA)
+npm run db:seed        # example equipment for dev; does nothing if any equipment exists
 ```
+
+The catalog e2e tests expect the seed data. The CI only runs lint, typecheck, unit tests and build, without a DB, so `next build` must never need credentials: get the DB through `getDb()` (`src/db/index.ts`), never at module scope.
 
 Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; every other integration is optional and the app must keep working without it.
 
@@ -37,6 +40,7 @@ Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; eve
 
 The source of truth is `src/db/schema.ts`. Names are Portuguese; keep them. Change the schema, then run `npm run db:generate`; never edit generated SQL by hand except for custom migrations.
 
+- Catalog search goes through `public.sem_acento()` (custom migration `drizzle/0001_busca_sem_acento.sql`), which is case- and accent-insensitive.
 - Equipment has two separate states. `disponivel = false` still appears in the catalog, marked as unavailable. `ativo = false` means deactivated: it is hidden from the catalog but kept in old quote requests. Equipment is never hard-deleted.
 - `sugestoes` covers both equipment the shop lacks (`novo_equipamento`) and "notify me when it is available" requests (`aguardar_disponibilidade`).
 - `notificacoes` is an outbox for WhatsApp Cloud API notices. While credentials are missing, rows stay `pendente`.

@@ -4,16 +4,19 @@ import postgres from "postgres";
 import { env } from "@/lib/env";
 import * as schema from "./schema";
 
-// Uma conexão por instância. `prepare: false` é exigido pelo pooler do
-// Supabase em modo transação.
-const globalParaDb = globalThis as unknown as {
-  conexao?: ReturnType<typeof postgres>;
-};
+function conectar() {
+  // `prepare: false` é exigido pelo pooler do Supabase em modo transação.
+  const conexao = postgres(env.DATABASE_URL, { prepare: false, max: 5 });
+  return drizzle(conexao, { schema });
+}
 
-const conexao =
-  globalParaDb.conexao ??
-  postgres(env.DATABASE_URL, { prepare: false, max: 5 });
+type Db = ReturnType<typeof conectar>;
 
-if (process.env.NODE_ENV !== "production") globalParaDb.conexao = conexao;
+// Uma conexão por instância, criada no primeiro uso: importar este módulo não
+// exige DATABASE_URL, então o build roda sem credenciais.
+const globalParaDb = globalThis as unknown as { db?: Db };
 
-export const db = drizzle(conexao, { schema });
+export function getDb(): Db {
+  globalParaDb.db ??= conectar();
+  return globalParaDb.db;
+}

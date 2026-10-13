@@ -11,8 +11,11 @@ const inteiro = (padrao: number) => z.coerce.number().int().positive().default(p
 const esquema = z.object({
   DATABASE_URL: z.string().min(1),
   NEXT_PUBLIC_SUPABASE_URL: z.url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  // Chave pública do Supabase. O nome novo é "publishable"; o antigo, "anon".
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: opcional,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: opcional,
+  // Chave secreta (service role): só o painel admin usa, para enviar fotos.
+  SUPABASE_SERVICE_ROLE_KEY: opcional,
   SUPABASE_BUCKET_FOTOS: z.string().default("equipamentos"),
   NEXT_PUBLIC_SITE_URL: z.url().default("http://localhost:3000"),
 
@@ -41,13 +44,24 @@ const esquema = z.object({
   LIMITE_FORMULARIOS_POR_IP_HORA: inteiro(5),
 });
 
-export type Env = z.infer<typeof esquema>;
+const esquemaComChave = esquema
+  .refine(
+    (e) => e.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || e.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    { path: ["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"] },
+  )
+  .transform((e) => ({
+    ...e,
+    supabaseChavePublica: (e.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+      e.NEXT_PUBLIC_SUPABASE_ANON_KEY)!,
+  }));
+
+export type Env = z.infer<typeof esquemaComChave>;
 
 let cache: Env | undefined;
 
 function carregar(): Env {
   if (cache) return cache;
-  const resultado = esquema.safeParse(process.env);
+  const resultado = esquemaComChave.safeParse(process.env);
   if (!resultado.success) {
     const campos = resultado.error.issues.map((i) => i.path.join(".")).join(", ");
     throw new Error(`Variáveis de ambiente inválidas ou ausentes: ${campos}`);
