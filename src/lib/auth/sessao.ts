@@ -1,6 +1,7 @@
 import "server-only";
 import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { cache } from "react";
 import { getDb } from "@/db";
 import { usuarios } from "@/db/schema";
@@ -16,6 +17,9 @@ export type UsuarioLogado = {
 
 // Funcionário da sessão atual, ou null. Uma consulta por pedido (React cache).
 export const usuarioAtual = cache(async (): Promise<UsuarioLogado | null> => {
+  // A validação do token compara a expiração com Date.now(): com Cache
+  // Components, isso só pode rodar no pedido, nunca no prerender.
+  await connection();
   const supabase = await criarClienteSupabase();
   const { data } = await supabase.auth.getClaims();
   const authUserId = data?.claims.sub;
