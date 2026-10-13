@@ -28,7 +28,7 @@ async function preencherDados(page: Page) {
 }
 
 test("pede orçamento a partir do detalhe do equipamento", async ({ page }) => {
-  await page.goto("/?busca=serra");
+  await page.goto("/catalogo?busca=serra");
   await page.getByRole("link", { name: /Serra mármore/ }).click();
   await expect(page).toHaveURL(/\/equipamentos\//);
   await page.getByRole("article").getByRole("link", { name: "Pedir orçamento" }).click();

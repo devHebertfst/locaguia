@@ -9,7 +9,7 @@ export default function EquipamentoNaoEncontrado() {
           Equipamento não encontrado
         </h1>
         <p className="text-lg text-muted-foreground">Ele pode ter sido removido do catálogo.</p>
-        <Link href="/#catalogo" className={buttonVariants({ variant: "terra", size: "lg" })}>
+        <Link href="/catalogo" className={buttonVariants({ variant: "terra", size: "lg" })}>
           Ver todos os equipamentos
         </Link>
       </div>

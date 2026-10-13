@@ -39,9 +39,9 @@ describe("padraoBusca", () => {
 
 describe("hrefCatalogo", () => {
   it("monta a URL só com os filtros preenchidos", () => {
-    expect(hrefCatalogo({})).toBe("/");
-    expect(hrefCatalogo({ categoria: "Acesso e altura" })).toBe("/?categoria=Acesso+e+altura");
-    expect(hrefCatalogo({ busca: "serra", categoria: "Corte" })).toBe("/?busca=serra&categoria=Corte");
+    expect(hrefCatalogo({})).toBe("/catalogo");
+    expect(hrefCatalogo({ categoria: "Acesso e altura" })).toBe("/catalogo?categoria=Acesso+e+altura");
+    expect(hrefCatalogo({ busca: "serra", categoria: "Corte" })).toBe("/catalogo?busca=serra&categoria=Corte");
   });
 });
 

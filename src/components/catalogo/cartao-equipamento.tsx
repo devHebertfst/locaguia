@@ -26,11 +26,11 @@ export function CartaoEquipamento({ equipamento }: { equipamento: EquipamentoCat
           )}
         />
         <span className="flex min-w-0 flex-1 flex-col gap-1.5 py-0.5 sm:px-1.5">
-          <h3 id={idNome} className="text-lg leading-snug font-semibold sm:text-xl">
+          <h2 id={idNome} className="text-lg leading-snug font-semibold sm:text-xl">
             <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_2px]">
               {equipamento.nome}
             </span>
-          </h3>
+          </h2>
           <span className="text-sm font-medium text-laranja-escuro">{equipamento.categoria}</span>
           <span className="line-clamp-2 text-sm text-muted-foreground">{equipamento.descricao}</span>
           <SeloDisponibilidade disponivel={equipamento.disponivel} className="mt-1" />

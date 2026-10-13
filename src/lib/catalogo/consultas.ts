@@ -119,3 +119,16 @@ export async function obterEquipamento(id: string): Promise<EquipamentoCatalogo 
   const fotos = await fotosPorEquipamento([linha.id]);
   return { ...linha, fotos: fotos.get(linha.id) ?? [] };
 }
+
+export type CategoriaResumo = { categoria: string; total: number };
+
+// Categorias do catálogo com quantos equipamentos ativos cada uma tem (home).
+export async function resumoCategorias(): Promise<CategoriaResumo[]> {
+  const linhas = await getDb()
+    .select({ categoria: equipamentos.categoria, total: sql<number>`count(*)::int` })
+    .from(equipamentos)
+    .where(eq(equipamentos.ativo, true))
+    .groupBy(equipamentos.categoria)
+    .orderBy(asc(equipamentos.categoria));
+  return linhas;
+}

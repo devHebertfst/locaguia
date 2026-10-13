@@ -30,5 +30,5 @@ export function hrefCatalogo(filtros: Partial<FiltrosCatalogo>): string {
   if (filtros.busca) params.set("busca", filtros.busca);
   if (filtros.categoria) params.set("categoria", filtros.categoria);
   const query = params.toString();
-  return query ? `/?${query}` : "/";
+  return query ? `/catalogo?${query}` : "/catalogo";
 }

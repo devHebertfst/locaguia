@@ -11,7 +11,7 @@ type Props = {
 export function BuscaCatalogo({ buscaAtual, categoriaAtual }: Props) {
   return (
     <Form
-      action="/"
+      action="/catalogo"
       role="search"
       scroll={false}
       className="flex items-center gap-1.5 rounded-full bg-white p-1.5 ring-1 ring-terra/15 transition-[box-shadow,background-color] focus-within:bg-[#fff4ea] focus-within:ring-2 focus-within:ring-laranja-escuro"

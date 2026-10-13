@@ -319,7 +319,7 @@ function Confirmacao({ codigo, linkWhatsapp }: { codigo: string; linkWhatsapp?: 
       ) : (
         <p>A locadora vai entrar em contato pelo WhatsApp que você informou.</p>
       )}
-      <Link href="/" className="text-sm underline underline-offset-4">
+      <Link href="/catalogo" className="text-sm underline underline-offset-4">
         Voltar ao catálogo
       </Link>
     </section>

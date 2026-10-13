@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Marca } from "./marca";
 
 const LINKS = [
-  { href: "/", rotulo: "Catálogo" },
+  { href: "/catalogo", rotulo: "Catálogo" },
   { href: "/assistente", rotulo: "Assistente" },
   { href: "/orcamento", rotulo: "Pedir orçamento" },
 ];

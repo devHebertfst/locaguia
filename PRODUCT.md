@@ -36,6 +36,8 @@ Locadora de bairro que ajuda o cliente a descobrir do que ele precisa. O assiste
 ## Evidence on Hand
 - A loja tem fotos reais dos equipamentos, dados da loja (endereço, cidade, horário, tempo de mercado) e depoimentos reais de clientes, mas **nada disso está no repositório ainda**. Até chegar, o site mostra só o que o sistema já tem. Não inventar endereço, anos de mercado, números, clientes nem depoimentos.
 - Fotos atuais: as que a equipe enviar pelo painel (Supabase Storage). Equipamento sem foto precisa de um estado digno.
+- A home usa três fotos de obra do Unsplash (licença livre, com crédito ao fotógrafo); não são da loja e não devem ser apresentadas como se fossem.
+- Avaliações: `src/conteudo/avaliacoes.ts` tem quatro avaliações de exemplo, escritas para o desenho da seção e visíveis só em desenvolvimento. As reais substituem esses exemplos.
 
 ## Product Principles
 1. O pedido de orçamento é o objetivo de toda tela pública; o caminho até ele é curto e óbvio no celular.
