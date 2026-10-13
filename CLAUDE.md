@@ -23,7 +23,7 @@ npm run db:migrate     # apply migrations (uses DATABASE_URL_DIRETA)
 npm run db:seed        # example equipment for dev; does nothing if any equipment exists
 ```
 
-The e2e tests run against the DB in `.env.local` and expect the seed data. They fix some env vars in `playwright.config.ts` (shop WhatsApp, high rate limit, Turnstile off), and tests that write rows use a marker name and delete them in `afterAll`. Next 16 keeps the previous page hidden in the DOM after a client navigation, so scope locators (`getByRole("article")`, the form) instead of searching the whole page. The CI only runs lint, typecheck, unit tests and build, without a DB, so `next build` must never need credentials: get the DB through `getDb()` (`src/db/index.ts`), never at module scope.
+The e2e tests run against the DB in `.env.local` and expect the seed data. They fix some env vars in `playwright.config.ts` (shop WhatsApp, high rate limits, Turnstile off, `ASSISTENTE_SIMULADO=1` so the assistant answers from `src/lib/assistente/simulado.ts` instead of Gemini), and tests that write rows use a marker name and delete them in `afterAll`. Next 16 keeps the previous page hidden in the DOM after a client navigation, so scope locators (`getByRole("article")`, the form) instead of searching the whole page. The CI only runs lint, typecheck, unit tests and build, without a DB, so `next build` must never need credentials: get the DB through `getDb()` (`src/db/index.ts`), never at module scope.
 
 Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; every other integration is optional and the app must keep working without it.
 
@@ -49,6 +49,7 @@ The source of truth is `src/db/schema.ts`. Names are Portuguese; keep them. Chan
 ## Hard product rules
 
 - The AI recommends **only** equipment with `ativo = true` and `disponivel = true`. Enforce this on the server: send the model only active equipment and drop every ID it returns that isn't active and available. Never rely on the prompt alone.
+- Assistant flow: `src/app/assistente/actions.ts` → `listarParaAssistente()` → `montarCatalogo()` gives the model short codes (`E1`, `E2`…) instead of UUIDs → Gemini with a JSON schema (`src/lib/assistente/gemini.ts`, primary model then fallback) → `interpretarResposta()` (`src/lib/assistente/nucleo.ts`) maps codes back, drops unknown ones, moves unavailable ones to `indisponiveis` and fixes `tipo`. Prompt changes belong in `instrucoesSistema()`; test them against real Gemini, since behavior shifts between model versions. The default model is Flash Lite (~1.5 s) because Flash took 6–20 s.
 - The AI may suggest complementary materials as a plain list. It never quotes prices, confirms reservations or claims availability. The shop sets prices and terms during the quote.
 - Quote requests are processed in this order:
   1. Save to the DB in a transaction. If this fails, block and show an error.
