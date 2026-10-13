@@ -36,6 +36,8 @@ Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; eve
 - Roles: `admin` can do everything, including managing users. `funcionario` manages equipment and quote requests. The first admin is inserted directly into the DB.
 - Visual system: `DESIGN.md` (tokens in `src/app/globals.css`, sidecar `.impeccable/design.json`) and product context in `PRODUCT.md`. Read both before UI work. The home hero renders a procedural three.js concrete mixer (`src/components/home/betoneira-3d.tsx`), lazy-loaded and static under reduced motion or software WebGL.
 - `src/lib/env.ts` validates env vars lazily on first access, so build and tests run without credentials.
+- Equipment photos: the admin panel shrinks each photo in the browser (WebP, JPEG fallback, 1600 px), gets a signed upload URL from a Server Action (`prepararEnvioFoto`, needs `SUPABASE_SERVICE_ROLE_KEY`) and uploads straight to the public `equipamentos` bucket (custom migration `drizzle/0002_bucket_fotos.sql`), then `registrarFoto` checks the file exists and records it. The first photo by `ordem` is the cover.
+- e2e tests set `LIMITES_PREFIXO=e2e:` so their rate-limit counters don't eat the dev limits in the shared DB.
 - Integrations: Gemini for the assistant, Turnstile for anti-spam, Resend for email to the shop, WhatsApp Cloud API for automatic notices to customers, a `wa.me` link to the shop's WhatsApp, and Vercel Cron.
 
 ## Data model
