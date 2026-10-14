@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { exigirUsuario } from "@/lib/auth/sessao";
 import { listarNoPainel } from "@/lib/equipamentos/consultas";
+import { contarPorStatus } from "@/lib/pedidos/consultas";
 
 export default function AdminPage() {
   return (
@@ -17,7 +18,7 @@ export default function AdminPage() {
 
 async function Resumo() {
   const usuario = await exigirUsuario();
-  const lista = await listarNoPainel();
+  const [lista, pedidos] = await Promise.all([listarNoPainel(), contarPorStatus()]);
   const ativos = lista.filter((e) => e.ativo);
   const indisponiveis = ativos.filter((e) => !e.disponivel).length;
   const semFoto = ativos.filter((e) => e.totalFotos === 0).length;
@@ -30,6 +31,23 @@ async function Resumo() {
           {usuario.papel === "admin" ? "Você entrou como administrador." : "Você entrou como funcionário."}
         </p>
       </div>
+
+      <section aria-labelledby="titulo-pedidos" className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="titulo-pedidos" className="text-2xl font-semibold">
+            Pedidos de orçamento
+          </h2>
+          <Link href="/admin/pedidos" className={buttonVariants({ variant: pedidos.nova > 0 ? "default" : "terra" })}>
+            {pedidos.nova > 0 ? "Responder os novos" : "Ver pedidos"}
+            <ArrowRight aria-hidden />
+          </Link>
+        </div>
+        <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
+          <Numero rotulo="Novos, esperando resposta" valor={pedidos.nova} destaque={pedidos.nova > 0} />
+          <Numero rotulo="Em atendimento" valor={pedidos.em_atendimento} />
+          <Numero rotulo="Fechados" valor={pedidos.fechada} />
+        </dl>
+      </section>
 
       <section aria-labelledby="titulo-equipamentos" className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">

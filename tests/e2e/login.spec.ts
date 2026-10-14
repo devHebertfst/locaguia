@@ -17,3 +17,8 @@ test("callback sem código volta ao login com erro", async ({ page }) => {
   await expect(page).toHaveURL(/\/entrar\?erro=falha$/);
   await expect(page.getByRole("main").getByRole("alert")).toContainText("Não foi possível entrar");
 });
+
+test("sem sessão, os pedidos também levam ao login", async ({ page }) => {
+  await page.goto("/admin/pedidos?status=todos");
+  await expect(page).toHaveURL(/\/entrar\?proximo=%2Fadmin%2Fpedidos%3Fstatus%3Dtodos$/);
+});
