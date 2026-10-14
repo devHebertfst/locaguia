@@ -7,6 +7,7 @@ import { FiltroCategorias } from "@/components/catalogo/filtro-categorias";
 import { TituloPagina } from "@/components/titulo-pagina";
 import { lerFiltros } from "@/lib/catalogo/filtros";
 import { listarCategorias, listarEquipamentos } from "@/lib/catalogo/consultas";
+import { hrefSugerir } from "@/lib/sugestoes/validacao";
 
 export const metadata: Metadata = {
   title: "Catálogo",
@@ -74,6 +75,9 @@ async function Catalogo({ searchParams }: Pick<PageProps<"/catalogo">, "searchPa
               </Link>
               <Link href="/assistente" className="font-medium text-laranja-escuro underline">
                 Perguntar ao assistente
+              </Link>
+              <Link href={hrefSugerir({ equipamento: filtros.busca })} className="font-medium underline">
+                Sugerir este equipamento
               </Link>
             </div>
           )}

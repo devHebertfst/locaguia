@@ -8,16 +8,20 @@ const LINKS = [
   { href: "/admin", rotulo: "Início" },
   { href: "/admin/pedidos", rotulo: "Pedidos" },
   { href: "/admin/equipamentos", rotulo: "Equipamentos" },
+  { href: "/admin/sugestoes", rotulo: "Sugestões" },
 ];
 
-export function NavAdmin() {
-  return <NavAdminLinks caminho={usePathname()} />;
+// "Equipe" só aparece para o admin. A página confere o papel de novo.
+const LINK_EQUIPE = { href: "/admin/equipe", rotulo: "Equipe" };
+
+export function NavAdmin({ admin }: { admin: boolean }) {
+  return <NavAdminLinks caminho={usePathname()} admin={admin} />;
 }
 
-export function NavAdminLinks({ caminho }: { caminho?: string }) {
+export function NavAdminLinks({ caminho, admin }: { caminho?: string; admin?: boolean }) {
   return (
-    <nav aria-label="Painel" className="flex items-center gap-1">
-      {LINKS.map(({ href, rotulo }) => {
+    <nav aria-label="Painel" className="flex flex-wrap items-center gap-1">
+      {(admin ? [...LINKS, LINK_EQUIPE] : LINKS).map(({ href, rotulo }) => {
         const atual = href === "/admin" ? caminho === "/admin" : Boolean(caminho?.startsWith(href));
         return (
           <Link

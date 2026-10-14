@@ -10,7 +10,9 @@ function conectar() {
   return drizzle(conexao, { schema });
 }
 
-type Db = ReturnType<typeof conectar>;
+export type Db = ReturnType<typeof conectar>;
+// Transação aberta com getDb().transaction(), para funções que rodam dentro dela.
+export type Transacao = Parameters<Parameters<Db["transaction"]>[0]>[0];
 
 // Uma conexão por instância, criada no primeiro uso: importar este módulo não
 // exige DATABASE_URL, então o build roda sem credenciais.

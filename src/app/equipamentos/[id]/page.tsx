@@ -6,7 +6,9 @@ import { ArrowLeft, ArrowRight, MessageCircleQuestion } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { GaleriaFotos } from "@/components/catalogo/galeria-fotos";
 import { SeloDisponibilidade } from "@/components/catalogo/selo-disponibilidade";
+import { FormularioSugestao } from "@/components/sugestoes/formulario-sugestao";
 import { obterEquipamento } from "@/lib/catalogo/consultas";
+import { env } from "@/lib/env";
 import { hrefOrcamento } from "@/lib/orcamento/params";
 
 export async function generateMetadata({
@@ -90,6 +92,25 @@ async function Detalhe({ id }: { id: string }) {
             Preço e condições são combinados direto com a locadora no orçamento.
           </p>
         </div>
+
+        {!equipamento.disponivel && (
+          <section id="avise-me" aria-labelledby="titulo-avise-me" className="flex scroll-mt-6 flex-col gap-4 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-6">
+            <div className="flex flex-col gap-1">
+              <h2 id="titulo-avise-me" className="text-2xl font-semibold">
+                Quer este equipamento?
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Deixe seu contato e a locadora fica sabendo que você precisa dele.
+              </p>
+            </div>
+            <FormularioSugestao
+              tipo="aguardar_disponibilidade"
+              equipamentoId={equipamento.id}
+              nomeEquipamento={equipamento.nome}
+              turnstileSiteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+            />
+          </section>
+        )}
       </div>
     </article>
   );
