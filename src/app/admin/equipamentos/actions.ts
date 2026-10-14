@@ -4,9 +4,12 @@ import { randomUUID } from "node:crypto";
 import { and, asc, count, eq, max } from "drizzle-orm";
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
-import { getDb } from "@/db";
+import { after } from "next/server";
+import { getDb, type Transacao } from "@/db";
 import { equipamentoFotos, equipamentos } from "@/db/schema";
 import { exigirUsuario } from "@/lib/auth/sessao";
+import { processarPendentes } from "@/lib/avisos/fila";
+import { aplicarEfeitosDaMudanca } from "@/lib/avisos/gatilhos";
 import {
   caminhoFotoValido,
   errosEquipamento,
@@ -50,18 +53,38 @@ export async function salvarEquipamento(
     redirect(`/admin/equipamentos/${novo.id}?criado=1`);
   }
 
-  const atualizados = await db
-    .update(equipamentos)
-    .set(validacao.data)
-    .where(eq(equipamentos.id, id))
-    .returning({ id: equipamentos.id });
-  if (atualizados.length === 0) return { status: "erro", mensagem: "Este equipamento não existe mais." };
+  const resultado = await db.transaction((tx) => atualizarComAvisos(tx, id, validacao.data));
+  if (!resultado) return { status: "erro", mensagem: "Este equipamento não existe mais." };
+  if (resultado.avisos > 0) after(() => processarPendentes());
   refresh();
   return { status: "ok", mensagem: "Alterações salvas." };
 }
 
+// Atualiza o equipamento com a linha travada e põe na fila os avisos que a
+// mudança dispara (voltou a ficar disponível, foi desativado). Null se o
+// equipamento não existe.
+async function atualizarComAvisos(
+  tx: Transacao,
+  id: string,
+  mudanca: Partial<{ nome: string; categoria: string; descricao: string; disponivel: boolean; ativo: boolean }>,
+): Promise<{ avisos: number } | null> {
+  const [antes] = await tx
+    .select({ id: equipamentos.id, nome: equipamentos.nome, ativo: equipamentos.ativo, disponivel: equipamentos.disponivel })
+    .from(equipamentos)
+    .where(eq(equipamentos.id, id))
+    .for("update");
+  if (!antes) return null;
+  const [depois] = await tx
+    .update(equipamentos)
+    .set(mudanca)
+    .where(eq(equipamentos.id, id))
+    .returning({ id: equipamentos.id, nome: equipamentos.nome, ativo: equipamentos.ativo, disponivel: equipamentos.disponivel });
+  return { avisos: await aplicarEfeitosDaMudanca(tx, antes, depois) };
+}
+
 // Disponível/indisponível e ativo/desativado mudam por botões, sem passar
 // pelo formulário inteiro. Nada é apagado: desativar só tira do catálogo.
+// Voltar a ficar disponível avisa quem pediu; desativar avisa os pedidos abertos.
 export async function alterarSituacao(formData: FormData) {
   await exigirUsuario();
   const id = String(formData.get("id") ?? "");
@@ -69,10 +92,10 @@ export async function alterarSituacao(formData: FormData) {
   const valor = formData.get("valor") === "true";
   if (!UUID.test(id) || (campo !== "disponivel" && campo !== "ativo")) return;
 
-  await getDb()
-    .update(equipamentos)
-    .set(campo === "ativo" ? { ativo: valor } : { disponivel: valor })
-    .where(eq(equipamentos.id, id));
+  const resultado = await getDb().transaction((tx) =>
+    atualizarComAvisos(tx, id, campo === "ativo" ? { ativo: valor } : { disponivel: valor }),
+  );
+  if (resultado && resultado.avisos > 0) after(() => processarPendentes());
   refresh();
 }
 

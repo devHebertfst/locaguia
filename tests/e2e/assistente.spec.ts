@@ -35,7 +35,7 @@ test("recomenda só o disponível e leva ao orçamento preenchido", async ({ pag
 
   const resposta = conversa(page).getByRole("article");
   await expect(resposta.getByRole("region", { name: "Equipamentos recomendados" }).getByRole("link", { name: /Serra mármore/ })).toBeVisible();
-  await expect(resposta.getByText("Também serviria, mas está indisponível no momento:")).toBeVisible();
+  await expect(resposta.getByText(/Também serviria, mas está indisponível no momento/)).toBeVisible();
   await expect(resposta.getByRole("link", { name: /Placa vibratória/ })).toBeVisible();
   await expect(resposta.getByText("Disco diamantado")).toBeVisible();
 

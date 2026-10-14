@@ -5,6 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { exigirUsuario } from "@/lib/auth/sessao";
 import { listarNoPainel } from "@/lib/equipamentos/consultas";
 import { contarPorStatus } from "@/lib/pedidos/consultas";
+import { contarSugestoesPorStatus } from "@/lib/sugestoes/consultas";
 
 export default function AdminPage() {
   return (
@@ -18,7 +19,7 @@ export default function AdminPage() {
 
 async function Resumo() {
   const usuario = await exigirUsuario();
-  const [lista, pedidos] = await Promise.all([listarNoPainel(), contarPorStatus()]);
+  const [lista, pedidos, sugestoes] = await Promise.all([listarNoPainel(), contarPorStatus(), contarSugestoesPorStatus()]);
   const ativos = lista.filter((e) => e.ativo);
   const indisponiveis = ativos.filter((e) => !e.disponivel).length;
   const semFoto = ativos.filter((e) => e.totalFotos === 0).length;
@@ -48,6 +49,21 @@ async function Resumo() {
           <Numero rotulo="Fechados" valor={pedidos.fechada} />
         </dl>
       </section>
+
+      {sugestoes.pendente > 0 && (
+        <section aria-labelledby="titulo-sugestoes" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-pessego/70 p-5 sm:px-7">
+          <div className="flex flex-col gap-0.5">
+            <h2 id="titulo-sugestoes" className="text-xl font-semibold">
+              {sugestoes.pendente === 1 ? "1 sugestão de cliente para olhar" : `${sugestoes.pendente} sugestões de clientes para olhar`}
+            </h2>
+            <p className="text-sm text-terra-2">Equipamentos que procuraram e a loja não tem, ou que estão esperando voltar.</p>
+          </div>
+          <Link href="/admin/sugestoes" className={buttonVariants({ variant: "terra" })}>
+            Ver sugestões
+            <ArrowRight aria-hidden />
+          </Link>
+        </section>
+      )}
 
       <section aria-labelledby="titulo-equipamentos" className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">

@@ -14,6 +14,7 @@ import {
   type RespostaAssistente,
 } from "@/lib/assistente/nucleo";
 import { hrefOrcamento } from "@/lib/orcamento/params";
+import { hrefSugerir } from "@/lib/sugestoes/validacao";
 import { cn } from "@/lib/utils";
 
 declare global {
@@ -303,7 +304,7 @@ function Resposta({
       {indisponiveis.length > 0 && (
         <section className="flex flex-col gap-2">
           <h3 className="text-sm font-medium text-terra-2">
-            Também serviria, mas está indisponível no momento:
+            Também serviria, mas está indisponível no momento. Abra para pedir um aviso quando voltar:
           </h3>
           <ul className="flex flex-col gap-2">
             {indisponiveis.map((e) => (
@@ -319,11 +320,19 @@ function Resposta({
             {resposta.equipamentoFaltante
               ? `Não temos "${resposta.equipamentoFaltante}" para alugar agora.`
               : "Não encontramos um equipamento para esse serviço no catálogo."}{" "}
-            Você pode descrever o serviço de outro jeito ou ver tudo o que temos.
+            Você pode descrever o serviço de outro jeito, ver tudo o que temos ou sugerir o equipamento para a locadora.
           </p>
-          <Link href="/catalogo" className="w-fit font-medium underline underline-offset-4">
-            Ver o catálogo completo
-          </Link>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <Link
+              href={hrefSugerir({ equipamento: resposta.equipamentoFaltante, servico: resposta.servicoResumo })}
+              className="w-fit font-medium text-laranja-escuro underline underline-offset-4"
+            >
+              Sugerir este equipamento
+            </Link>
+            <Link href="/catalogo" className="w-fit font-medium underline underline-offset-4">
+              Ver o catálogo completo
+            </Link>
+          </div>
         </div>
       )}
 
@@ -341,7 +350,7 @@ function CartaoRecomendado({ item, indisponivel }: { item: ItemRecomendado; indi
   return (
     <li>
       <Link
-        href={`/equipamentos/${item.id}`}
+        href={indisponivel ? `/equipamentos/${item.id}#avise-me` : `/equipamentos/${item.id}`}
         className={cn(
           "group flex items-start justify-between gap-4 rounded-xl bg-white p-4 ring-1 ring-terra/8 transition-shadow hover:ring-laranja",
           indisponivel && "bg-white/60 text-terra-2",

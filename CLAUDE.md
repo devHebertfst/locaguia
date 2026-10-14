@@ -33,7 +33,7 @@ Copy `.env.example` to `.env.local`. Only the Supabase/DB block is required; eve
 - **Supabase**: Postgres (through Drizzle, `src/db/`), Storage for equipment photos, and Auth with Google for staff only. Firebase from the spec was replaced. Customers never log in. A Google account that isn't in `usuarios` with `autorizado = true` only sees the public catalog.
 - **Data access is server-only.** The server connects as the DB owner. Every table has RLS on with no policies, so the browser can't read or write anything directly. Check the user's role in every Server Action or Route Handler with `exigirUsuario()` (`src/lib/auth/sessao.ts`); the proxy check is only optimistic.
 - Staff login: `/entrar` → Google through Supabase Auth → `/auth/callback`, which links the Auth account to the `usuarios` row by e-mail on first login and signs out anyone not authorized. The Supabase project needs the Google provider on and `<SITE_URL>/auth/callback` in its allowed redirect URLs.
-- Roles: `admin` can do everything, including managing users. `funcionario` manages equipment and quote requests. The first admin is inserted directly into the DB.
+- Roles: `admin` can do everything, including managing users at `/admin/equipe` (add by Google e-mail, change role, block/unblock; nobody is deleted, an admin can't block or demote themselves, and the last active admin can't be removed: `bloqueioDaMudanca()` in `src/lib/equipe/regras.ts`). `funcionario` manages equipment, quote requests and suggestions. The first admin is inserted directly into the DB.
 - Visual system: `DESIGN.md` (tokens in `src/app/globals.css`, sidecar `.impeccable/design.json`) and product context in `PRODUCT.md`. Read both before UI work. The home hero renders a procedural three.js concrete mixer (`src/components/home/betoneira-3d.tsx`), lazy-loaded and static under reduced motion or software WebGL.
 - `src/lib/env.ts` validates env vars lazily on first access, so build and tests run without credentials.
 - Equipment photos: the admin panel shrinks each photo in the browser (WebP, JPEG fallback, 1600 px), gets a signed upload URL from a Server Action (`prepararEnvioFoto`, needs `SUPABASE_SERVICE_ROLE_KEY`) and uploads straight to the public `equipamentos` bucket (custom migration `drizzle/0002_bucket_fotos.sql`), then `registrarFoto` checks the file exists and records it. The first photo by `ordem` is the cover.
@@ -48,8 +48,8 @@ The source of truth is `src/db/schema.ts`. Names are Portuguese; keep them. Chan
 
 - Catalog search goes through `public.sem_acento()` (custom migration `drizzle/0001_busca_sem_acento.sql`), which is case- and accent-insensitive.
 - Equipment has two separate states. `disponivel = false` still appears in the catalog, marked as unavailable. `ativo = false` means deactivated: it is hidden from the catalog but kept in old quote requests. Equipment is never hard-deleted.
-- `sugestoes` covers both equipment the shop lacks (`novo_equipamento`) and "notify me when it is available" requests (`aguardar_disponibilidade`).
-- `notificacoes` is an outbox for WhatsApp Cloud API notices. While credentials are missing, rows stay `pendente`.
+- `sugestoes` covers both equipment the shop lacks (`novo_equipamento`, from `/sugerir`, linked from an empty catalog search and the assistant's `sem_equipamento` answer) and "notify me when it is available" requests (`aguardar_disponibilidade`, the form on an unavailable equipment's page, `#avise-me`). Both go through `enviarSugestao` (`src/app/sugerir/actions.ts`); the staff handles them at `/admin/sugestoes`.
+- `notificacoes` is an outbox for WhatsApp Cloud API notices (`src/lib/avisos/`). Rows are inserted in the same transaction as the change that causes them, sent right after the response with `after(() => processarPendentes())`, and retried by the Vercel Cron (`/api/cron/avisos`, `vercel.json`, needs `CRON_SECRET`). Each send locks its row (`for update skip locked`) so nothing goes out twice. While credentials are missing, rows stay `pendente`. Template names and parameters are documented in `src/lib/avisos/templates.ts` and must match the templates approved in Meta.
 - `limites_uso` holds rate-limit counters per key and time window.
 
 ## Hard product rules
@@ -66,9 +66,11 @@ The source of truth is `src/db/schema.ts`. Names are Portuguese; keep them. Chan
 - Public forms go through Turnstile (skipped when `TURNSTILE_SECRET_KEY` is empty) and `consumirLimite()` (`src/lib/limites.ts`).
 - The customer's consent to WhatsApp notices (`aceita_whatsapp`) must start unchecked.
 - Customers get automatic WhatsApp notices in three cases:
-  - **Suggested equipment arrived:** sent when the admin links the suggestion to the new equipment. There is no fuzzy matching.
-  - **Equipment is available again:** sent to `aguardar_disponibilidade` suggestions that asked to be notified.
-  - **Equipment was deactivated:** sent to open quote requests (`nova` or `em_atendimento`) whose customer consented.
+  - **Suggested equipment arrived:** sent when the admin links the suggestion to the new equipment (`atenderSugestao`, only to active and available equipment). There is no fuzzy matching.
+  - **Equipment is available again:** sent to `aguardar_disponibilidade` suggestions that asked to be notified. "Available again" means becoming active and available, including reactivation; all pending suggestions for it become `atendida`.
+  - **Equipment was deactivated:** sent to open quote requests (`nova` or `em_atendimento`) whose customer consented, once per request and equipment.
+  - Every change to an equipment's `ativo`/`disponivel` must go through `atualizarComAvisos()` (`src/app/admin/equipamentos/actions.ts`), which locks the row and calls `aplicarEfeitosDaMudanca()`. A plain `update` skips the notices.
+- Consent to notices on suggestions (`quer_aviso`) also starts unchecked.
 
 ## Out of scope for the MVP (do not build)
 
