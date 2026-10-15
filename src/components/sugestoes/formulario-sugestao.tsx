@@ -46,9 +46,9 @@ export function FormularioSugestao(props: Props) {
   if (estado.status === "ok") {
     return (
       <section aria-live="polite" className={cn("flex flex-col items-start gap-3", className)}>
-        <CheckCircle2 aria-hidden className="size-8 text-[#1d8a3a]" />
+        <CheckCircle2 aria-hidden className="size-8 text-[#5ccf7d]" />
         <h2 className="text-2xl font-semibold">{tipo === "novo_equipamento" ? "Sugestão enviada" : "Pedido anotado"}</h2>
-        <p className="text-terra-2">
+        <p className="text-muted-foreground">
           {estado.querAviso
             ? tipo === "novo_equipamento"
               ? "Obrigado! Se a locadora passar a ter este equipamento, você recebe um aviso no WhatsApp."
@@ -72,7 +72,7 @@ export function FormularioSugestao(props: Props) {
       {props.tipo === "aguardar_disponibilidade" && <input type="hidden" name="equipamentoId" value={props.equipamentoId} />}
 
       {estado.status === "erro" && estado.mensagem && (
-        <p role="alert" className="rounded-xl bg-white p-4 text-sm font-medium text-destructive ring-1 ring-destructive/40">
+        <p role="alert" className="rounded-xl bg-card p-4 text-sm font-medium text-destructive ring-1 ring-destructive/40">
           {estado.mensagem}
         </p>
       )}

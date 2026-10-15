@@ -1,12 +1,12 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-13T20:00:00-03:00",
+  "generatedAt": "2026-10-14T12:00:00-03:00",
   "title": "Design System: LocaGuia",
   "extensions": {
     "colorMeta": {
       "terra": { "role": "secondary", "displayName": "Terra", "canonical": "#241d17", "tonalRamp": ["#120d09", "#241d17", "#3a312a", "#54493f", "#736759", "#998d80", "#c4bab0", "#ede8e3"] },
       "terra-2": { "role": "secondary", "displayName": "Graphite", "canonical": "#443f3b", "tonalRamp": ["#1a1715", "#2e2a27", "#443f3b", "#5d5752", "#7b7570", "#a19c97", "#c9c5c1", "#eceae8"] },
-      "concreto": { "role": "neutral", "displayName": "Concrete", "canonical": "#eeeeee", "tonalRamp": ["#1f1f1f", "#383838", "#555555", "#777777", "#9b9b9b", "#c2c2c2", "#e2e1df", "#eeeeee"] },
+      "concreto": { "role": "neutral", "displayName": "Concrete", "canonical": "#2c241e", "tonalRamp": ["#120d09", "#1c1611", "#241d17", "#2c241e", "#3d332b", "#54493f", "#736759", "#998d80"] },
       "laranja": { "role": "primary", "displayName": "Signal Orange", "canonical": "#f1933c", "tonalRamp": ["#3d1d02", "#6b3505", "#a9550a", "#c9680e", "#e47f22", "#f1933c", "#f8bd86", "#ffdebf"] },
       "laranja-forte": { "role": "primary", "displayName": "Pressed Orange", "canonical": "#e47f22" },
       "laranja-escuro": { "role": "primary", "displayName": "Rust Text Orange", "canonical": "#a9550a" },
@@ -17,11 +17,15 @@
       "areia": { "role": "neutral", "displayName": "Sand", "canonical": "#c9c1b8" },
       "branco": { "role": "neutral", "displayName": "White", "canonical": "#ffffff" },
       "texto-no-terra": { "role": "neutral", "displayName": "Text on Terra", "canonical": "#f6f1ec" },
-      "texto-suave": { "role": "neutral", "displayName": "Soft Text", "canonical": "#575655" },
+      "texto-suave": { "role": "neutral", "displayName": "Soft Text", "canonical": "#bdb3a9" },
       "placeholder": { "role": "neutral", "displayName": "Placeholder", "canonical": "#6b655f" },
-      "borda": { "role": "neutral", "displayName": "Hairline", "canonical": "#dadad9" },
-      "borda-campo": { "role": "neutral", "displayName": "Field Stroke", "canonical": "#8c8782" },
-      "destrutivo": { "role": "neutral", "displayName": "Destructive", "canonical": "#c42b1c" }
+      "borda": { "role": "neutral", "displayName": "Hairline", "canonical": "#4a4038" },
+      "borda-campo": { "role": "neutral", "displayName": "Field Stroke", "canonical": "#786e65" },
+      "destrutivo": { "role": "neutral", "displayName": "Destructive", "canonical": "#f2705f" },
+      "creme": { "role": "neutral", "displayName": "Cream", "canonical": "#f6f1ec" },
+      "cartao": { "role": "neutral", "displayName": "Card", "canonical": "#352c25" },
+      "muted": { "role": "neutral", "displayName": "Muted", "canonical": "#3d332b" },
+      "acento": { "role": "tertiary", "displayName": "Accent", "canonical": "#4a3422" }
     },
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Home hero headline only; page-title bands use the same voice at clamp(2rem, 5vw, 3.5rem), line-height 1.04." },
@@ -126,38 +130,38 @@
   ],
   "narrative": {
     "northStar": "The Job-Site Mixer",
-    "overview": "LocaGuia is a construction site seen at dusk: a near-black earth-brown ground (terra) carries the header, page bands and footer, and against it a signal-orange works like site signage. Below the brown, the body opens into white and concrete-grey bands where the catalog, forms and answers live. The world is a translation of the Bolduzer rental reference into one small shop's voice: warm, physical, plain-spoken, and built for someone on a phone with dust on their hands.\n\nDensity is relaxed but not airy. Content sits in a 1280px column with generous section bands; cards and panels are white on concrete with hairline rings rather than heavy borders. Everything a customer can press is a pill, like a road sign or a hard-hat sticker. Soft peach fields mark where the customer types or where the assistant adds something extra. The signature is a procedural three.js concrete mixer in the home hero whose drum turns slowly, can be dragged, and speeds up when a job is sent in: the request goes \"into the mixer\" and comes out as equipment.\n\nThe build rejects the stock rental-shop hero (excavator photo, \"Alugue já\", service cards) and the small uppercase kicker above headings. Category is information about the equipment, so it sits under the name in sentence case or as a pill on the detail page.",
+    "overview": "**Creative North Star: \"The Job-Site Mixer\"**\n\nLocaGuia is a construction site seen at dusk: a near-black earth-brown ground (terra) carries every page, from header to footer, and against it a signal-orange works like site signage. The brown runs through the whole app: the body alternates terra and a slightly lighter terra (concrete) band, and the catalog, forms and answers sit on warm dark cards one step lighter. The world is a translation of the Bolduzer rental reference into one small shop's voice: warm, physical, plain-spoken, and built for someone on a phone with dust on their hands.\n\nDensity is relaxed but not airy. Content sits in a 1280px column with generous section bands; cards and panels are a lighter brown on the terra ground with hairline cream rings rather than heavy borders. Everything a customer can press is a pill, like a road sign or a hard-hat sticker. Orange-tinted fields (acento) mark where the customer types or where the assistant adds something extra; the hero question field stays a light peach pill. The signature is a procedural three.js concrete mixer in the home hero whose drum turns slowly, can be dragged, and speeds up when a job is sent in: the request goes \"into the mixer\" and comes out as equipment.\n\nThe build rejects the stock rental-shop hero (excavator photo, \"Alugue já\", service cards) and the small uppercase kicker above headings. Category is information about the equipment, so it sits under the name in sentence case or as a pill on the detail page.",
     "keyCharacteristics": [
-      "Terra ground on top and bottom (header, page-title bands, hero, footer); white and concrete body between.",
+      "Terra ground everywhere: header, hero, page bands, body and footer; dark cards one step lighter carry the content.",
       "Signal orange with dark terra text on every primary action; never white on orange.",
       "Cabin 500 display headings with tight tracking; Inter for everything read.",
       "Pills for every control, 15px cards, 20px panels and bands.",
-      "Flat surfaces with hairline terra rings; shadow appears on hover or under the hero field.",
+      "Flat surfaces with hairline cream rings; shadow appears on hover or under the hero field.",
       "One 3D signature, decorative and optional, that yields to reduced motion and weak hardware."
     ],
     "rules": [
       { "name": "The Dark-On-Orange Rule", "body": "Text on Signal Orange is always terra. The Bolduzer reference uses white; that fails contrast here, and the build translated it deliberately.", "section": "colors" },
-      { "name": "The Two Oranges Rule", "body": "Signal Orange is for fills and display-size type; anything orange at 14px on white uses Rust Text Orange.", "section": "colors" },
-      { "name": "The Terra Ground Rule", "body": "Terra is a ground, not a card. It runs edge to edge as header, hero, page-title band and footer; inside the body it appears only at control scale (terra button, active chip, chat bubble).", "section": "colors" },
-      { "name": "The No-Kicker Rule", "body": "Nothing small, uppercase and tracked sits above a heading. Category goes below the name in sentence case (Rust Text Orange, 14px 500) or in a pill beside the availability seal on the detail page.", "section": "typography" },
+      { "name": "The Two Oranges Rule", "body": "Signal Orange is for fills and for orange text on the dark ground; anything orange at text size on a light surface (the peach hero field) uses Rust Text Orange.", "section": "colors" },
+      { "name": "The Terra Ground Rule", "body": "Terra is the ground of every page, edge to edge. Content lifts off it with lighter browns (concrete bands, cards), never with white surfaces; strong controls on terra are cream with terra text.", "section": "colors" },
+      { "name": "The No-Kicker Rule", "body": "Nothing small, uppercase and tracked sits above a heading. Category goes below the name in sentence case (Signal Orange, 14px 500) or in a pill beside the availability seal on the detail page.", "section": "typography" },
       { "name": "The Medium Display Rule", "body": "Display and headline Cabin stay at weight 500; 600 is reserved for title-size type, and the logotype alone uses 700.", "section": "typography" },
-      { "name": "The Ring-Not-Border Rule", "body": "Containers on light grounds use a 1px terra ring at low opacity (8% at rest, up to 20-40% for open or hovered), not a grey border.", "section": "elevation" }
+      { "name": "The Ring-Not-Border Rule", "body": "Containers use a 1px cream ring at low opacity (8% at rest, up to 20-40% for open or hovered), not a grey border.", "section": "elevation" }
     ],
     "dos": [
       "**Do** put terra text on every Signal Orange fill (The Dark-On-Orange Rule).",
-      "**Do** use Rust Text Orange (laranja-escuro) for any orange text at body or label size on white or concrete.",
+      "**Do** use Signal Orange for orange text on the dark ground; keep Rust Text Orange for the rare light surface.",
       "**Do** open every inner page with a terra page-title band continuing the header, and close every page with the terra footer.",
       "**Do** make every pressable control a full pill; keep cards at 15px and panels at 20px.",
-      "**Do** set category under the equipment name in sentence case, Rust Text Orange, 14px 500.",
-      "**Do** separate light containers with a terra ring at 8-15% opacity rather than a grey border.",
-      "**Do** use Peach Field or Peach for places where the customer types or the assistant adds context, with Placeholder (#6b655f) as placeholder text on peach.",
+      "**Do** set category under the equipment name in sentence case, Signal Orange, 14px 500.",
+      "**Do** separate containers with a cream ring at 8-15% opacity rather than a grey border.",
+      "**Do** use Accent for places where the assistant adds context; the hero question field is the one Peach Field, with Placeholder (#6b655f) as its placeholder text.",
       "**Do** keep any motion decorative and stoppable: honor `prefers-reduced-motion`, and keep heavy scenes lazy-loaded, paused off-screen and capped at 30fps when idle."
     ],
     "donts": [
       "**Don't** put white text on Signal Orange.",
       "**Don't** add a small uppercase kicker or eyebrow above headings.",
       "**Don't** set display or headline Cabin heavier than 500.",
-      "**Don't** use terra as a card color inside light sections; it is a ground or a control, never a container.",
+      "**Don't** reintroduce white or light-grey surfaces in the body; lift content with lighter browns instead.",
       "**Don't** open with the stock rental hero (equipment photo, \"Alugue já\", service-card row).",
       "**Don't** add a second 3D or animated signature; the mixer is the one."
     ]

@@ -7,6 +7,7 @@ import { Avaliacoes } from "@/components/home/avaliacoes";
 import { TopoHome } from "@/components/home/topo-home";
 import { buttonVariants } from "@/components/ui/button";
 import { hrefCatalogo } from "@/lib/catalogo/filtros";
+import { cn } from "@/lib/utils";
 import { resumoCategorias } from "@/lib/catalogo/consultas";
 
 // Fotos de obra do Unsplash (licença livre). A query precisa ser igual à
@@ -110,7 +111,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="titulo-para-quem" className="bg-white">
+      <section aria-labelledby="titulo-para-quem" className="bg-background">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-16 sm:px-6 md:py-24">
           <h2 id="titulo-para-quem" className={`${tituloSecao} max-w-2xl`}>
             Para quem é do ramo e para quem nunca alugou
@@ -150,7 +151,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="titulo-motivos" className="bg-white">
+      <section aria-labelledby="titulo-motivos" className="bg-background">
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[1fr_1.5fr] md:py-24">
           <div className="flex flex-col gap-4">
             <h2 id="titulo-motivos" className={tituloSecao}>
@@ -162,7 +163,7 @@ export default function HomePage() {
           </div>
           <ul className="flex flex-col">
             {MOTIVOS.map((m) => (
-              <li key={m.titulo} className="flex flex-col gap-2 border-t border-terra/12 py-7 first:border-t-0 first:pt-0">
+              <li key={m.titulo} className="flex flex-col gap-2 border-t border-foreground/12 py-7 first:border-t-0 first:pt-0">
                 <h3 className="flex items-center gap-3 text-2xl font-semibold">
                   <span aria-hidden className="h-0.5 w-6 rounded-full bg-laranja" />
                   {m.titulo}
@@ -188,9 +189,9 @@ export default function HomePage() {
             {PASSOS.map((passo, i) => (
               <li
                 key={passo.titulo}
-                className="grid grid-cols-[3.5rem_1fr] gap-x-5 border-t border-terra/12 py-7 first:border-t-0 first:pt-0 sm:grid-cols-[5rem_1fr]"
+                className="grid grid-cols-[3.5rem_1fr] gap-x-5 border-t border-foreground/12 py-7 first:border-t-0 first:pt-0 sm:grid-cols-[5rem_1fr]"
               >
-                <span aria-hidden className="font-heading text-5xl leading-none font-semibold text-laranja-escuro sm:text-6xl">
+                <span aria-hidden className="font-heading text-5xl leading-none font-semibold text-laranja sm:text-6xl">
                   {i + 1}
                 </span>
                 <div className="flex flex-col gap-1.5">
@@ -205,17 +206,17 @@ export default function HomePage() {
 
       <Avaliacoes />
 
-      <section aria-labelledby="titulo-perguntas" className="bg-white">
+      <section aria-labelledby="titulo-perguntas" className="bg-background">
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[1fr_1.5fr] md:py-24">
           <h2 id="titulo-perguntas" className={tituloSecao}>
             Perguntas frequentes
           </h2>
           <div className="flex flex-col gap-2">
             {PERGUNTAS.map(({ pergunta, resposta }) => (
-              <details key={pergunta} className="group rounded-xl bg-concreto ring-1 ring-transparent open:bg-white open:ring-terra/15">
+              <details key={pergunta} className="group rounded-xl bg-concreto ring-1 ring-transparent open:bg-card open:ring-foreground/15">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-5 py-4 font-heading text-lg font-semibold [&::-webkit-details-marker]:hidden">
                   {pergunta}
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white transition-[background-color,rotate] duration-300 group-open:rotate-45 group-open:bg-laranja">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-card transition-[background-color,rotate] duration-300 group-open:rotate-45 group-open:bg-laranja">
                     <Plus aria-hidden className="size-4" />
                   </span>
                 </summary>
@@ -232,13 +233,13 @@ export default function HomePage() {
             Bora começar a obra? Conte o serviço para o assistente.
           </h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/assistente" className={buttonVariants({ variant: "terra", size: "lg" })}>
+            <Link href="/assistente" className={cn(buttonVariants({ variant: "terra", size: "lg" }), "bg-terra text-creme hover:bg-terra-2")}>
               Perguntar ao assistente
               <ArrowRight aria-hidden />
             </Link>
             <Link
               href="/catalogo"
-              className={buttonVariants({ variant: "outline", size: "lg", className: "border-terra/40 hover:bg-white/30" })}
+              className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-terra/40 text-terra hover:border-terra hover:bg-white/30")}
             >
               Ver o catálogo
             </Link>
@@ -274,7 +275,7 @@ function Publico({
         <h3 className="text-3xl font-medium tracking-[-0.015em]">{titulo}</h3>
         <p className="max-w-[48ch] text-lg leading-relaxed text-muted-foreground">{texto}</p>
       </div>
-      <Link href={acao.href} className="group inline-flex w-fit items-center gap-2 font-semibold text-laranja-escuro">
+      <Link href={acao.href} className="group inline-flex w-fit items-center gap-2 font-semibold text-laranja">
         <span className="underline decoration-2 underline-offset-4">{acao.rotulo}</span>
         <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
       </Link>
@@ -294,7 +295,7 @@ async function Categorias() {
         <li key={categoria}>
           <Link
             href={hrefCatalogo({ categoria })}
-            className="group flex h-full items-center justify-between gap-4 rounded-xl bg-white px-5 py-5 ring-1 ring-terra/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(36_29_23/0.35)]"
+            className="group flex h-full items-center justify-between gap-4 rounded-xl bg-card px-5 py-5 ring-1 ring-foreground/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(36_29_23/0.35)]"
           >
             <span className="flex flex-col gap-0.5">
               <span className="font-heading text-xl font-semibold">{categoria}</span>
@@ -316,7 +317,7 @@ function CategoriasCarregando() {
   return (
     <div aria-busy="true" aria-label="Carregando categorias" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: 8 }, (_, i) => (
-        <div key={i} className="h-[5.5rem] animate-pulse rounded-xl bg-white" />
+        <div key={i} className="h-[5.5rem] animate-pulse rounded-xl bg-card" />
       ))}
     </div>
   );

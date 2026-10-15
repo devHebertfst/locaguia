@@ -18,7 +18,7 @@ export default function EquipePage() {
           Quem pode entrar no painel. Bloquear tira o acesso na hora; o cadastro continua aqui e pode ser liberado de novo.
         </p>
       </div>
-      <Suspense fallback={<div aria-busy="true" aria-label="Carregando equipe" className="h-96 animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" aria-label="Carregando equipe" className="h-96 animate-pulse rounded-2xl bg-card" />}>
         <Conteudo />
       </Suspense>
     </main>
@@ -31,7 +31,7 @@ async function Conteudo() {
 
   return (
     <>
-      <ul aria-label="Pessoas da equipe" className="divide-y divide-terra/8 overflow-hidden rounded-2xl bg-white ring-1 ring-terra/8">
+      <ul aria-label="Pessoas da equipe" className="divide-y divide-foreground/8 overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/8">
         {equipe.map((m) => (
           <li
             key={m.id}
@@ -40,7 +40,7 @@ async function Conteudo() {
             <div className="flex min-w-0 flex-col gap-1">
               <span className="flex flex-wrap items-center gap-2">
                 <span className={cn("font-heading text-lg font-semibold", !m.autorizado && "text-muted-foreground")}>{m.nome}</span>
-                <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", m.papel === "admin" ? "bg-terra text-white" : "bg-concreto text-terra-2")}>
+                <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", m.papel === "admin" ? "bg-creme text-terra" : "bg-concreto text-muted-foreground")}>
                   {ROTULO_PAPEL[m.papel]}
                 </span>
                 {!m.autorizado && (

@@ -39,7 +39,7 @@ export function FormularioEquipamento({ id, valores = vazio, categorias }: Props
         acao(formData);
       }}
       noValidate
-      className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7"
+      className="flex flex-col gap-5 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-7"
     >
       {id && <input type="hidden" name="id" value={id} />}
       <h2 className="text-2xl font-semibold">Dados do equipamento</h2>
@@ -121,7 +121,7 @@ export function FormularioEquipamento({ id, valores = vazio, categorias }: Props
           {salvando ? "Salvando…" : id ? "Salvar alterações" : "Cadastrar equipamento"}
         </Button>
         {estado.status === "ok" && !alterado && (
-          <p role="status" className="flex items-center gap-1.5 text-sm font-medium text-[#1d6b34]">
+          <p role="status" className="flex items-center gap-1.5 text-sm font-medium text-[#7ed99a]">
             <CheckCircle2 aria-hidden className="size-4" />
             {estado.mensagem}
           </p>

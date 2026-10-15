@@ -19,7 +19,7 @@ export default function NovoEquipamentoPage() {
         <h1 className="text-4xl font-medium tracking-[-0.02em]">Novo equipamento</h1>
         <p className="text-muted-foreground">Depois de cadastrar, você envia as fotos na mesma tela.</p>
       </div>
-      <Suspense fallback={<div aria-busy="true" className="h-[32rem] animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" className="h-[32rem] animate-pulse rounded-2xl bg-card" />}>
         <Formulario />
       </Suspense>
     </main>

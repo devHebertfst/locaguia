@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 const ESTILO: Record<StatusPedido, string> = {
   nova: "bg-laranja text-terra",
   em_atendimento: "bg-pessego text-terra",
-  fechada: "bg-[#e3f4e6] text-[#1d6b34]",
+  fechada: "bg-[#203826] text-[#7ed99a]",
   perdida: "bg-concreto text-muted-foreground",
 };
 

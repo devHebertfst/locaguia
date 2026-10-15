@@ -14,7 +14,7 @@ export function BuscaCatalogo({ buscaAtual, categoriaAtual }: Props) {
       action="/catalogo"
       role="search"
       scroll={false}
-      className="flex items-center gap-1.5 rounded-full bg-white p-1.5 ring-1 ring-terra/15 transition-[box-shadow,background-color] focus-within:bg-[#fff4ea] focus-within:ring-2 focus-within:ring-laranja-escuro"
+      className="flex items-center gap-1.5 rounded-full bg-card p-1.5 ring-1 ring-foreground/15 transition-[box-shadow,background-color] focus-within:bg-accent focus-within:ring-2 focus-within:ring-laranja"
     >
       <Search aria-hidden className="ml-3 size-5 shrink-0 text-muted-foreground" />
       <label htmlFor="busca" className="sr-only">

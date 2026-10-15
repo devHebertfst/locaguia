@@ -22,7 +22,7 @@ export default function EditarEquipamentoPage({ params, searchParams }: PageProp
         <ArrowLeft aria-hidden className="size-4" />
         Equipamentos
       </Link>
-      <Suspense fallback={<div aria-busy="true" className="h-[40rem] animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" className="h-[40rem] animate-pulse rounded-2xl bg-card" />}>
         {Promise.all([params, searchParams]).then(([{ id }, busca]) => (
           <Edicao id={id} criado={busca.criado === "1"} />
         ))}
@@ -45,7 +45,7 @@ async function Edicao({ id, criado }: { id: string; criado: boolean }) {
             {equipamento.ativo ? (
               <Situacao disponivel={equipamento.disponivel} />
             ) : (
-              <span className="rounded-full bg-terra px-2.5 py-1 text-xs font-medium text-white">Desativado</span>
+              <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground">Desativado</span>
             )}
           </div>
         </div>
@@ -53,7 +53,7 @@ async function Edicao({ id, criado }: { id: string; criado: boolean }) {
           <Link
             href={`/equipamentos/${equipamento.id}`}
             target="_blank"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-laranja-escuro underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-laranja underline"
           >
             Ver no catálogo
             <ArrowUpRight aria-hidden className="size-4" />
@@ -62,7 +62,7 @@ async function Edicao({ id, criado }: { id: string; criado: boolean }) {
       </div>
 
       {criado && (
-        <p role="status" className="flex items-center gap-2 rounded-xl bg-[#e3f4e6] p-4 text-sm font-medium text-[#1d6b34]">
+        <p role="status" className="flex items-center gap-2 rounded-xl bg-[#203826] p-4 text-sm font-medium text-[#7ed99a]">
           <CheckCircle2 aria-hidden className="size-4 shrink-0" />
           Equipamento cadastrado. Agora envie as fotos.
         </p>
@@ -90,7 +90,7 @@ async function Edicao({ id, criado }: { id: string; criado: boolean }) {
         }}
       />
 
-      <section aria-labelledby="titulo-catalogo" className="flex flex-col gap-3 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+      <section aria-labelledby="titulo-catalogo" className="flex flex-col gap-3 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-7">
         <h2 id="titulo-catalogo" className="text-2xl font-semibold">
           {equipamento.ativo ? "Tirar do catálogo" : "Voltar ao catálogo"}
         </h2>

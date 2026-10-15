@@ -22,7 +22,7 @@ export default function OrcamentoPage({ searchParams }: PageProps<"/orcamento">)
         largura="max-w-3xl"
       />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 sm:px-6 md:py-12">
-        <Suspense fallback={<div aria-busy="true" className="h-96 animate-pulse rounded-2xl bg-white" />}>
+        <Suspense fallback={<div aria-busy="true" className="h-96 animate-pulse rounded-2xl bg-card" />}>
           <Formulario searchParams={searchParams} />
         </Suspense>
       </div>
@@ -41,7 +41,7 @@ async function Formulario({ searchParams }: Pick<PageProps<"/orcamento">, "searc
   return (
     <>
       {foraDoPedido > 0 && (
-        <p className="rounded-xl bg-pessego/70 p-4 text-sm">
+        <p className="rounded-xl bg-accent p-4 text-sm">
           {foraDoPedido === 1
             ? "Um equipamento escolhido não está disponível agora e ficou fora do pedido."
             : `${foraDoPedido} equipamentos escolhidos não estão disponíveis agora e ficaram fora do pedido.`}

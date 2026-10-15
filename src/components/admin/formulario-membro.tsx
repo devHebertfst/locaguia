@@ -31,7 +31,7 @@ export function FormularioMembro() {
   }, [estado]);
 
   return (
-    <form action={acao} noValidate className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+    <form action={acao} noValidate className="flex flex-col gap-5 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-7">
       <div className="flex flex-col gap-1">
         <h2 className="text-2xl font-semibold">Adicionar à equipe</h2>
         <p className="text-sm text-muted-foreground">
@@ -78,7 +78,7 @@ export function FormularioMembro() {
         <legend className="mb-1.5 text-sm font-medium">Papel</legend>
         <div className="grid gap-2 sm:grid-cols-2">
           {PAPEIS.map((p) => (
-            <label key={p} className="flex cursor-pointer items-start gap-3 rounded-xl bg-concreto p-4 has-[:checked]:ring-2 has-[:checked]:ring-laranja-escuro">
+            <label key={p} className="flex cursor-pointer items-start gap-3 rounded-xl bg-concreto p-4 has-[:checked]:ring-2 has-[:checked]:ring-laranja">
               <input
                 type="radio"
                 name="papel"
@@ -101,7 +101,7 @@ export function FormularioMembro() {
           {salvando ? "Adicionando…" : "Adicionar"}
         </Button>
         {estado.status === "ok" && (
-          <p role="status" className="flex items-center gap-1.5 text-sm font-medium text-[#1d6b34]">
+          <p role="status" className="flex items-center gap-1.5 text-sm font-medium text-[#7ed99a]">
             <CheckCircle2 aria-hidden className="size-4 shrink-0" />
             {estado.mensagem}
           </p>

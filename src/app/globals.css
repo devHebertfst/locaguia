@@ -34,6 +34,7 @@
   --color-laranja-escuro: var(--laranja-escuro);
   --color-pessego: var(--pessego);
   --color-areia: var(--areia);
+  --color-creme: var(--creme);
 
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
@@ -47,31 +48,34 @@
 :root {
   --terra: #241d17;
   --terra-2: #443f3b;
-  --concreto: #eeeeee;
+  --concreto: #2c241e;
   --laranja: #f1933c;
   --laranja-forte: #e47f22;
   --laranja-escuro: #a9550a;
   --pessego: #ffdebf;
   --areia: #c9c1b8;
+  --creme: #f6f1ec;
 
-  --background: #ffffff;
-  --foreground: #241d17;
-  --card: #ffffff;
-  --card-foreground: #241d17;
-  --popover: #ffffff;
-  --popover-foreground: #241d17;
+  /* O app inteiro fica no chão terra: faixas alternam terra e concreto
+     (um terra um pouco mais claro) e cartões sobem mais um tom. */
+  --background: #241d17;
+  --foreground: #f6f1ec;
+  --card: #352c25;
+  --card-foreground: #f6f1ec;
+  --popover: #352c25;
+  --popover-foreground: #f6f1ec;
   --primary: #f1933c;
   --primary-foreground: #241d17;
-  --secondary: #eeeeee;
-  --secondary-foreground: #241d17;
-  --muted: #eeeeee;
-  --muted-foreground: #575655;
-  --accent: #ffdebf;
-  --accent-foreground: #241d17;
-  --destructive: #c42b1c;
-  --border: #dadad9;
-  --input: #8c8782;
-  --ring: #c9680e;
+  --secondary: #3d332b;
+  --secondary-foreground: #f6f1ec;
+  --muted: #3d332b;
+  --muted-foreground: #bdb3a9;
+  --accent: #4a3422;
+  --accent-foreground: #f6f1ec;
+  --destructive: #f2705f;
+  --border: #4a4038;
+  --input: #786e65;
+  --ring: #f1933c;
   --radius: 0.75rem;
 }
 
@@ -81,12 +85,13 @@
   }
   html {
     @apply font-sans;
+    color-scheme: dark;
     scrollbar-color: var(--areia) transparent;
     -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply bg-background text-foreground;
-    caret-color: var(--laranja-escuro);
+    caret-color: var(--laranja);
   }
   ::selection {
     background: var(--pessego);

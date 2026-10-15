@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function EntrarPage({ searchParams }: PageProps<"/entrar">) {
   return (
     <main className="flex flex-1 items-center justify-center bg-concreto px-4 py-16">
-      <div className="flex w-full max-w-md flex-col gap-6 rounded-2xl bg-white p-6 ring-1 ring-terra/8 sm:p-8">
+      <div className="flex w-full max-w-md flex-col gap-6 rounded-2xl bg-card p-6 ring-1 ring-foreground/8 sm:p-8">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-medium tracking-[-0.02em]">Área da equipe</h1>
           <p className="text-muted-foreground">

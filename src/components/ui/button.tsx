@@ -11,13 +11,13 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-[0_6px_16px_-8px_rgb(201_104_14/0.7)] hover:bg-laranja-forte",
-        terra: "bg-terra text-white hover:bg-terra-2",
+        terra: "bg-creme text-terra hover:bg-areia",
         outline:
-          "border-terra/25 bg-transparent text-foreground hover:border-terra hover:bg-concreto aria-expanded:bg-muted",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-[#e2e1df]",
+          "border-foreground/25 bg-transparent text-foreground hover:border-foreground hover:bg-concreto aria-expanded:bg-muted",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-[#453b33]",
         ghost: "hover:bg-muted hover:text-foreground aria-expanded:bg-muted",
         destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
-        link: "text-laranja-escuro underline-offset-4 hover:underline",
+        link: "text-laranja underline-offset-4 hover:underline",
       },
       size: {
         default:

@@ -10,7 +10,7 @@ import { contarSugestoesPorStatus } from "@/lib/sugestoes/consultas";
 export default function AdminPage() {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6 md:py-12">
-      <Suspense fallback={<div aria-busy="true" className="h-40 animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" className="h-40 animate-pulse rounded-2xl bg-card" />}>
         <Resumo />
       </Suspense>
     </main>
@@ -33,7 +33,7 @@ async function Resumo() {
         </p>
       </div>
 
-      <section aria-labelledby="titulo-pedidos" className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+      <section aria-labelledby="titulo-pedidos" className="flex flex-col gap-5 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="titulo-pedidos" className="text-2xl font-semibold">
             Pedidos de orçamento
@@ -51,12 +51,12 @@ async function Resumo() {
       </section>
 
       {sugestoes.pendente > 0 && (
-        <section aria-labelledby="titulo-sugestoes" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-pessego/70 p-5 sm:px-7">
+        <section aria-labelledby="titulo-sugestoes" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-accent p-5 sm:px-7">
           <div className="flex flex-col gap-0.5">
             <h2 id="titulo-sugestoes" className="text-xl font-semibold">
               {sugestoes.pendente === 1 ? "1 sugestão de cliente para olhar" : `${sugestoes.pendente} sugestões de clientes para olhar`}
             </h2>
-            <p className="text-sm text-terra-2">Equipamentos que procuraram e a loja não tem, ou que estão esperando voltar.</p>
+            <p className="text-sm text-muted-foreground">Equipamentos que procuraram e a loja não tem, ou que estão esperando voltar.</p>
           </div>
           <Link href="/admin/sugestoes" className={buttonVariants({ variant: "terra" })}>
             Ver sugestões
@@ -65,7 +65,7 @@ async function Resumo() {
         </section>
       )}
 
-      <section aria-labelledby="titulo-equipamentos" className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+      <section aria-labelledby="titulo-equipamentos" className="flex flex-col gap-5 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="titulo-equipamentos" className="text-2xl font-semibold">
             Equipamentos
@@ -92,9 +92,9 @@ async function Resumo() {
 
 function Numero({ rotulo, valor, destaque }: { rotulo: string; valor: number; destaque?: boolean }) {
   return (
-    <div className="flex flex-col-reverse gap-0.5 border-t border-terra/10 pt-3">
+    <div className="flex flex-col-reverse gap-0.5 border-t border-foreground/10 pt-3">
       <dt className="text-sm text-muted-foreground">{rotulo}</dt>
-      <dd className={destaque ? "font-heading text-3xl font-semibold text-laranja-escuro tabular-nums" : "font-heading text-3xl font-semibold tabular-nums"}>
+      <dd className={destaque ? "font-heading text-3xl font-semibold text-laranja tabular-nums" : "font-heading text-3xl font-semibold tabular-nums"}>
         {valor}
       </dd>
     </div>

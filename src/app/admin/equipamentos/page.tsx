@@ -28,7 +28,7 @@ export default function EquipamentosAdminPage() {
           Novo equipamento
         </Link>
       </div>
-      <Suspense fallback={<div aria-busy="true" aria-label="Carregando equipamentos" className="h-96 animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" aria-label="Carregando equipamentos" className="h-96 animate-pulse rounded-2xl bg-card" />}>
         <Lista />
       </Suspense>
     </main>
@@ -76,9 +76,9 @@ function Grupo({
         {descricao && <p className="text-sm text-muted-foreground">{descricao}</p>}
       </div>
       {equipamentos.length === 0 ? (
-        <p className="rounded-2xl border-2 border-dashed border-terra/15 p-6 text-muted-foreground">{vazio}</p>
+        <p className="rounded-2xl border-2 border-dashed border-foreground/15 p-6 text-muted-foreground">{vazio}</p>
       ) : (
-        <ul className="divide-y divide-terra/8 overflow-hidden rounded-2xl bg-white ring-1 ring-terra/8">
+        <ul className="divide-y divide-foreground/8 overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/8">
           {equipamentos.map((e) => (
             <Linha key={e.id} equipamento={e} />
           ))}
@@ -92,11 +92,11 @@ function Linha({ equipamento: e }: { equipamento: EquipamentoPainel }) {
   return (
     <li className="flex flex-wrap items-center gap-x-4 gap-y-3 p-3 sm:flex-nowrap sm:px-4">
       <Link href={`/admin/equipamentos/${e.id}`} className="group flex min-w-0 flex-1 items-center gap-4">
-        <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-[#fbe7d3]">
+        <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-accent">
           {e.capa ? (
             <Image src={e.capa} alt="" fill sizes="56px" className="object-cover" />
           ) : (
-            <span className="flex size-full items-center justify-center text-laranja-escuro/70">
+            <span className="flex size-full items-center justify-center text-laranja/70">
               <ImageOff aria-hidden className="size-5" />
             </span>
           )}
@@ -106,7 +106,7 @@ function Linha({ equipamento: e }: { equipamento: EquipamentoPainel }) {
           <span className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
             <span>{e.categoria}</span>
             <span aria-hidden>·</span>
-            <span className={cn(e.totalFotos === 0 && "font-medium text-laranja-escuro")}>
+            <span className={cn(e.totalFotos === 0 && "font-medium text-laranja")}>
               {e.totalFotos === 0 ? "sem foto" : e.totalFotos === 1 ? "1 foto" : `${e.totalFotos} fotos`}
             </span>
           </span>
