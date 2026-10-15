@@ -69,7 +69,7 @@ export function FotosEquipamento({ equipamentoId, nome, fotos, storage }: Props)
   }
 
   return (
-    <section aria-labelledby="titulo-fotos" className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7">
+    <section aria-labelledby="titulo-fotos" className="flex flex-col gap-5 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-col gap-0.5">
           <h2 id="titulo-fotos" className="text-2xl font-semibold">
@@ -111,7 +111,7 @@ export function FotosEquipamento({ equipamentoId, nome, fotos, storage }: Props)
       </div>
 
       {!storage && (
-        <p className="rounded-xl bg-pessego/70 p-4 text-sm">
+        <p className="rounded-xl bg-accent p-4 text-sm">
           O envio de fotos ainda não está ligado: falta configurar a chave secreta do Supabase
           (<code className="font-mono text-xs">SUPABASE_SERVICE_ROLE_KEY</code>) no servidor.
         </p>
@@ -136,7 +136,7 @@ export function FotosEquipamento({ equipamentoId, nome, fotos, storage }: Props)
       )}
 
       {fotos.length === 0 ? (
-        <p className="rounded-xl border-2 border-dashed border-terra/15 p-6 text-center text-muted-foreground">
+        <p className="rounded-xl border-2 border-dashed border-foreground/15 p-6 text-center text-muted-foreground">
           Nenhuma foto ainda. Sem foto, o catálogo mostra um quadro com uma ferramenta desenhada.
         </p>
       ) : (

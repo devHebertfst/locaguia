@@ -25,8 +25,8 @@ export function FiltroCategorias({ categorias, filtros }: Props) {
                 className={cn(
                   "inline-flex h-9 items-center rounded-full px-4 text-sm font-medium transition-colors",
                   ativa
-                    ? "bg-terra text-white"
-                    : "bg-white text-terra-2 ring-1 ring-terra/12 hover:ring-terra/40",
+                    ? "bg-creme text-terra"
+                    : "bg-card text-muted-foreground ring-1 ring-foreground/12 hover:ring-foreground/40",
                 )}
               >
                 {rotulo}

@@ -6,7 +6,7 @@ export function SeloDisponibilidade({ disponivel, className }: { disponivel: boo
     <span
       className={cn(
         "inline-flex w-fit items-center gap-1.5 rounded-full text-xs font-medium",
-        disponivel ? "text-[#1d6b34]" : "bg-concreto px-2.5 py-1 text-muted-foreground",
+        disponivel ? "text-[#7ed99a]" : "bg-concreto px-2.5 py-1 text-muted-foreground",
         className,
       )}
     >

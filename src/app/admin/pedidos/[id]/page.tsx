@@ -28,7 +28,7 @@ export default function PedidoPage({ params }: PageProps<"/admin/pedidos/[id]">)
         <ArrowLeft aria-hidden className="size-4" />
         Pedidos
       </Link>
-      <Suspense fallback={<div aria-busy="true" className="h-[36rem] animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" className="h-[36rem] animate-pulse rounded-2xl bg-card" />}>
         {params.then(({ id }) => (
           <Detalhe id={id} />
         ))}
@@ -67,7 +67,7 @@ async function Detalhe({ id }: { id: string }) {
           </Bloco>
 
           <Bloco titulo="Equipamentos">
-            <ul className="flex flex-col divide-y divide-terra/8">
+            <ul className="flex flex-col divide-y divide-foreground/8">
               {pedido.equipamentos.map((e) => (
                 <li key={e.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 first:pt-0 last:pb-0">
                   <span className="flex flex-col">
@@ -88,9 +88,9 @@ async function Detalhe({ id }: { id: string }) {
 
           {pedido.materiais.length > 0 && (
             <Bloco titulo="Materiais sugeridos pelo assistente">
-              <ul className="grid gap-x-6 gap-y-1 text-terra-2 sm:grid-cols-2">
+              <ul className="grid gap-x-6 gap-y-1 text-muted-foreground sm:grid-cols-2">
                 {pedido.materiais.map((m) => (
-                  <li key={m} className="flex items-baseline gap-2 before:size-1.5 before:shrink-0 before:translate-y-[-0.15em] before:rounded-full before:bg-laranja-escuro before:content-['']">
+                  <li key={m} className="flex items-baseline gap-2 before:size-1.5 before:shrink-0 before:translate-y-[-0.15em] before:rounded-full before:bg-laranja before:content-['']">
                     {m}
                   </li>
                 ))}
@@ -148,17 +148,17 @@ function Andamento({ pedido }: { pedido: PedidoDetalhe }) {
 
 function SituacaoAtual({ equipamento }: { equipamento: PedidoDetalhe["equipamentos"][number] }) {
   if (!equipamento.ativo) {
-    return <span className="rounded-full bg-terra px-2.5 py-1 text-xs font-medium text-white">Desativado</span>;
+    return <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground">Desativado</span>;
   }
   if (!equipamento.disponivel) {
     return <span className="rounded-full bg-concreto px-2.5 py-1 text-xs font-medium text-muted-foreground">Indisponível agora</span>;
   }
-  return <span className="text-xs font-medium text-[#1d6b34]">Disponível agora</span>;
+  return <span className="text-xs font-medium text-[#7ed99a]">Disponível agora</span>;
 }
 
 function Bloco({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-6">
+    <section className="flex flex-col gap-3 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-6">
       <h2 className="text-sm font-semibold text-muted-foreground">{titulo}</h2>
       {children}
     </section>

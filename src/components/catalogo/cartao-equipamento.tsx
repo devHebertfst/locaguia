@@ -11,7 +11,7 @@ export function CartaoEquipamento({ equipamento }: { equipamento: EquipamentoCat
 
   return (
     <article
-      className="group relative flex w-full flex-col gap-3 rounded-xl bg-white p-2.5 shadow-[0_1px_2px_rgb(36_29_23/0.06)] ring-1 ring-terra/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(36_29_23/0.35)] sm:gap-0 sm:p-3"
+      className="group relative flex w-full flex-col gap-3 rounded-xl bg-card p-2.5 shadow-[0_1px_2px_rgb(36_29_23/0.06)] ring-1 ring-foreground/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(36_29_23/0.35)] sm:gap-0 sm:p-3"
     >
       {/* No celular a foto fica à esquerda do nome, para caber
           vários equipamentos na tela; a partir do tablet, ela vai em cima. */}
@@ -31,7 +31,7 @@ export function CartaoEquipamento({ equipamento }: { equipamento: EquipamentoCat
               {equipamento.nome}
             </span>
           </h2>
-          <span className="text-sm font-medium text-laranja-escuro">{equipamento.categoria}</span>
+          <span className="text-sm font-medium text-laranja">{equipamento.categoria}</span>
           <span className="line-clamp-2 text-sm text-muted-foreground">{equipamento.descricao}</span>
           <SeloDisponibilidade disponivel={equipamento.disponivel} className="mt-1" />
         </span>
@@ -43,7 +43,7 @@ export function CartaoEquipamento({ equipamento }: { equipamento: EquipamentoCat
           className="mt-auto flex h-10 items-center justify-between rounded-full bg-concreto pr-1.5 pl-4 text-sm font-semibold transition-colors hover:bg-laranja sm:mx-1.5 sm:mt-4 sm:mb-0.5"
         >
           Pedir orçamento
-          <span className="flex size-7 items-center justify-center rounded-full bg-terra text-white">
+          <span className="flex size-7 items-center justify-center rounded-full bg-creme text-terra">
             <ArrowUpRight aria-hidden className="size-4" />
           </span>
         </Link>

@@ -32,7 +32,7 @@ export default function SugestoesPage({ searchParams }: PageProps<"/admin/sugest
           Equipamentos que os clientes procuraram e a loja não tem, e quem está esperando um equipamento voltar.
         </p>
       </div>
-      <Suspense fallback={<div aria-busy="true" aria-label="Carregando sugestões" className="h-96 animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" aria-label="Carregando sugestões" className="h-96 animate-pulse rounded-2xl bg-card" />}>
         {searchParams.then((p) => (
           <Lista filtro={lerFiltroSugestao(p.status)} />
         ))}
@@ -63,11 +63,11 @@ async function Lista({ filtro }: { filtro: FiltroSugestao }) {
                 scroll={false}
                 className={cn(
                   "inline-flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors",
-                  f === filtro ? "bg-terra text-white" : "bg-white text-terra-2 ring-1 ring-terra/12 hover:ring-terra/40",
+                  f === filtro ? "bg-creme text-terra" : "bg-card text-muted-foreground ring-1 ring-foreground/12 hover:ring-foreground/40",
                 )}
               >
                 {ROTULO_FILTRO_SUGESTAO[f]}
-                <span className={cn("tabular-nums", f === filtro ? "text-white/70" : "text-muted-foreground")}>{total(f)}</span>
+                <span className={cn("tabular-nums", f === filtro ? "text-terra/70" : "text-muted-foreground")}>{total(f)}</span>
               </Link>
             </li>
           ))}
@@ -75,7 +75,7 @@ async function Lista({ filtro }: { filtro: FiltroSugestao }) {
       </nav>
 
       {itens.length === 0 ? (
-        <p className="rounded-2xl border-2 border-dashed border-terra/15 p-8 text-muted-foreground">
+        <p className="rounded-2xl border-2 border-dashed border-foreground/15 p-8 text-muted-foreground">
           {filtro === "pendente"
             ? "Nenhuma sugestão esperando. Elas chegam pelo catálogo, pelo assistente e pelos equipamentos indisponíveis."
             : "Nenhuma sugestão neste filtro."}
@@ -98,13 +98,13 @@ function Cartao({ sugestao: s, disponiveis, agora }: { sugestao: SugestaoPainel;
     <article
       aria-label={s.nomeEquipamento}
       className={cn(
-        "grid gap-5 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-6 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]",
-        s.status === "pendente" && s.tipo === "novo_equipamento" && "bg-[#fff8f1]",
+        "grid gap-5 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-6 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]",
+        s.status === "pendente" && s.tipo === "novo_equipamento" && "bg-laranja/[0.07]",
       )}
     >
       <div className="flex min-w-0 flex-col gap-2">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-          <span className="font-medium text-laranja-escuro">{ROTULO_TIPO_SUGESTAO[s.tipo]}</span>
+          <span className="font-medium text-laranja">{ROTULO_TIPO_SUGESTAO[s.tipo]}</span>
           <span className="text-muted-foreground tabular-nums">{formatarRecebido(s.criadoEm, agora)}</span>
         </div>
         <h2 className="font-heading text-2xl font-semibold">
@@ -116,16 +116,16 @@ function Cartao({ sugestao: s, disponiveis, agora }: { sugestao: SugestaoPainel;
             s.nomeEquipamento
           )}
         </h2>
-        {s.motivo && <p className="max-w-[65ch] whitespace-pre-line text-terra-2">{s.motivo}</p>}
+        {s.motivo && <p className="max-w-[65ch] whitespace-pre-line text-muted-foreground">{s.motivo}</p>}
         <Resolucao sugestao={s} disponiveis={disponiveis} />
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-terra/10 pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-6">
+      <div className="flex flex-col gap-3 border-t border-foreground/10 pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-6">
         <div className="flex flex-col gap-0.5">
           <span className="font-semibold">{s.nomeCliente}</span>
           <span className="text-sm text-muted-foreground tabular-nums">{formatarCelular(s.telefone)}</span>
         </div>
-        <p className={cn("flex items-center gap-1.5 text-sm", s.querAviso ? "font-medium text-[#1d6b34]" : "text-muted-foreground")}>
+        <p className={cn("flex items-center gap-1.5 text-sm", s.querAviso ? "font-medium text-[#7ed99a]" : "text-muted-foreground")}>
           {s.querAviso && <BellRing aria-hidden className="size-4" />}
           {s.querAviso ? "Pediu aviso automático no WhatsApp" : "Não pediu aviso automático"}
         </p>
@@ -146,7 +146,7 @@ function Cartao({ sugestao: s, disponiveis, agora }: { sugestao: SugestaoPainel;
 function Resolucao({ sugestao: s, disponiveis }: { sugestao: SugestaoPainel; disponiveis: OpcaoEquipamento[] }) {
   if (s.status === "atendida") {
     return (
-      <p className="text-sm text-[#1d6b34]">
+      <p className="text-sm text-[#7ed99a]">
         Atendida{s.atendidoPor && <> com <Link href={`/admin/equipamentos/${s.atendidoPor.id}`} className="font-medium underline">{s.atendidoPor.nome}</Link></>}
         {s.querAviso && ". O aviso foi para a fila do WhatsApp."}
       </p>
@@ -181,7 +181,7 @@ function Resolucao({ sugestao: s, disponiveis }: { sugestao: SugestaoPainel; dis
                 name="equipamentoId"
                 required
                 defaultValue=""
-                className="h-10 w-full rounded-xl border border-input bg-white px-3 text-base outline-none focus-visible:border-laranja-escuro focus-visible:ring-3 focus-visible:ring-laranja/35 md:text-sm"
+                className="h-10 w-full rounded-xl border border-input bg-card px-3 text-base outline-none focus-visible:border-laranja focus-visible:ring-3 focus-visible:ring-laranja/35 md:text-sm"
               >
                 <option value="" disabled>
                   Escolha o equipamento…
@@ -202,7 +202,7 @@ function Resolucao({ sugestao: s, disponiveis }: { sugestao: SugestaoPainel; dis
         )
       ) : (
         <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-          {s.equipamento && (s.equipamento.ativo ? <Situacao disponivel={s.equipamento.disponivel} /> : <span className="rounded-full bg-terra px-2.5 py-1 text-xs font-medium text-white">Desativado</span>)}
+          {s.equipamento && (s.equipamento.ativo ? <Situacao disponivel={s.equipamento.disponivel} /> : <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground">Desativado</span>)}
           Fica atendida sozinha quando o equipamento voltar a ficar disponível{s.querAviso ? ", e o cliente recebe o aviso" : ""}.
         </p>
       )}

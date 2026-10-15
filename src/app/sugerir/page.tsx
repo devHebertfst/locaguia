@@ -19,7 +19,7 @@ export default function SugerirPage({ searchParams }: PageProps<"/sugerir">) {
         largura="max-w-3xl"
       />
       <div className="mx-auto flex w-full max-w-3xl flex-col px-4 py-8 sm:px-6 md:py-12">
-        <Suspense fallback={<div aria-busy="true" className="h-96 animate-pulse rounded-2xl bg-white" />}>
+        <Suspense fallback={<div aria-busy="true" className="h-96 animate-pulse rounded-2xl bg-card" />}>
           {searchParams.then((p) => {
             const preenchimento = lerPreenchimentoSugestao(p);
             return (
@@ -28,7 +28,7 @@ export default function SugerirPage({ searchParams }: PageProps<"/sugerir">) {
                 nomeEquipamentoInicial={preenchimento.nomeEquipamento}
                 motivoInicial={preenchimento.motivo}
                 turnstileSiteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                className="rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-7"
+                className="rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-7"
               />
             );
           })}

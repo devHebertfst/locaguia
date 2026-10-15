@@ -62,15 +62,15 @@ async function Detalhe({ id }: { id: string }) {
             {equipamento.nome}
           </h1>
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-white px-3 py-1 text-sm font-medium text-laranja-escuro ring-1 ring-terra/10">
+            <span className="rounded-full bg-card px-3 py-1 text-sm font-medium text-laranja ring-1 ring-foreground/10">
               {equipamento.categoria}
             </span>
             <SeloDisponibilidade disponivel={equipamento.disponivel} />
           </div>
         </div>
-        <p className="max-w-[62ch] text-lg leading-relaxed whitespace-pre-line text-terra-2">{equipamento.descricao}</p>
+        <p className="max-w-[62ch] text-lg leading-relaxed whitespace-pre-line text-muted-foreground">{equipamento.descricao}</p>
 
-        <div className="mt-2 flex flex-col gap-4 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-6">
+        <div className="mt-2 flex flex-col gap-4 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-6">
           {equipamento.disponivel ? (
             <Link
               href={hrefOrcamento({ equipamentos: [equipamento.id] })}
@@ -94,7 +94,7 @@ async function Detalhe({ id }: { id: string }) {
         </div>
 
         {!equipamento.disponivel && (
-          <section id="avise-me" aria-labelledby="titulo-avise-me" className="flex scroll-mt-6 flex-col gap-4 rounded-2xl bg-white p-5 ring-1 ring-terra/8 sm:p-6">
+          <section id="avise-me" aria-labelledby="titulo-avise-me" className="flex scroll-mt-6 flex-col gap-4 rounded-2xl bg-card p-5 ring-1 ring-foreground/8 sm:p-6">
             <div className="flex flex-col gap-1">
               <h2 id="titulo-avise-me" className="text-2xl font-semibold">
                 Quer este equipamento?
@@ -123,11 +123,11 @@ function DetalheCarregando() {
       aria-label="Carregando equipamento"
       className="grid gap-8 md:grid-cols-[1.15fr_1fr] md:gap-12"
     >
-      <div className="aspect-[4/3] animate-pulse rounded-2xl bg-white" />
+      <div className="aspect-[4/3] animate-pulse rounded-2xl bg-card" />
       <div className="flex flex-col gap-4">
-        <div className="h-4 w-24 animate-pulse rounded bg-white" />
-        <div className="h-12 w-3/4 animate-pulse rounded bg-white" />
-        <div className="h-28 animate-pulse rounded bg-white" />
+        <div className="h-4 w-24 animate-pulse rounded bg-card" />
+        <div className="h-12 w-3/4 animate-pulse rounded bg-card" />
+        <div className="h-28 animate-pulse rounded bg-card" />
       </div>
     </div>
   );

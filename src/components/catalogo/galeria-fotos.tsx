@@ -28,7 +28,7 @@ export function GaleriaFotos({ fotos, nome }: { fotos: string[]; nome: string })
                 aria-current={i === atual}
                 className={cn(
                   "relative block size-16 overflow-hidden rounded-lg ring-2 ring-offset-2 ring-offset-concreto transition",
-                  i === atual ? "ring-laranja-escuro" : "ring-transparent opacity-70 hover:opacity-100",
+                  i === atual ? "ring-laranja" : "ring-transparent opacity-70 hover:opacity-100",
                 )}
               >
                 <Image src={foto} alt="" fill sizes="64px" className="object-cover" />

@@ -145,7 +145,7 @@ export function ChatAssistente() {
 
       {vazio ? (
         <section aria-labelledby="exemplos" className="flex flex-col gap-3">
-          <h2 id="exemplos" className="text-sm font-medium text-terra-2">
+          <h2 id="exemplos" className="text-sm font-medium text-muted-foreground">
             Toque em um exemplo ou escreva com suas palavras:
           </h2>
           <ul className="grid gap-2 sm:grid-cols-2">
@@ -154,7 +154,7 @@ export function ChatAssistente() {
                 <button
                   type="button"
                   onClick={() => enviar(exemplo)}
-                  className="group flex min-h-14 w-full items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 text-left font-medium ring-1 ring-terra/8 transition-[box-shadow,background-color] hover:ring-laranja"
+                  className="group flex min-h-14 w-full items-center justify-between gap-3 rounded-xl bg-card px-4 py-3 text-left font-medium ring-1 ring-foreground/8 transition-[box-shadow,background-color] hover:ring-laranja"
                 >
                   {exemplo}
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja"><ArrowRight aria-hidden className="size-4" /></span>
@@ -176,11 +176,11 @@ export function ChatAssistente() {
         {itens.map((item, i) => (
           <li key={i}>
             {item.papel === "cliente" ? (
-              <p className="ml-auto w-fit max-w-[85%] whitespace-pre-line rounded-2xl rounded-br-md bg-terra px-4 py-3 text-white">
+              <p className="ml-auto w-fit max-w-[85%] whitespace-pre-line rounded-2xl rounded-br-md bg-accent px-4 py-3 text-foreground">
                 {item.texto}
               </p>
             ) : item.papel === "erro" ? (
-              <p role="alert" className="rounded-xl bg-white p-4 text-sm text-destructive ring-1 ring-destructive/30">
+              <p role="alert" className="rounded-xl bg-card p-4 text-sm text-destructive ring-1 ring-destructive/30">
                 {item.texto}
               </p>
             ) : (
@@ -190,8 +190,8 @@ export function ChatAssistente() {
         ))}
         {pendente && (
           <li aria-label="O assistente está respondendo">
-            <p className="flex w-fit items-center gap-2 rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm text-muted-foreground ring-1 ring-terra/8">
-              <LoaderCircle aria-hidden className="size-4 animate-spin text-laranja-escuro motion-reduce:animate-none" />
+            <p className="flex w-fit items-center gap-2 rounded-2xl rounded-bl-md bg-card px-4 py-3 text-sm text-muted-foreground ring-1 ring-foreground/8">
+              <LoaderCircle aria-hidden className="size-4 animate-spin text-laranja motion-reduce:animate-none" />
               Procurando no catálogo…
             </p>
           </li>
@@ -228,7 +228,7 @@ export function ChatAssistente() {
             rows={1}
             maxLength={LIMITES_ASSISTENTE.tamanhoMensagem}
             placeholder={vazio ? "Ex.: vou reformar o banheiro e trocar o azulejo" : "Escreva sua resposta…"}
-            className="field-sizing-content max-h-40 min-h-12 flex-1 resize-none rounded-3xl border border-input bg-white px-4 py-3 text-base outline-none placeholder:text-[#6b655f] focus-visible:border-laranja-escuro focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-laranja/35"
+            className="field-sizing-content max-h-40 min-h-12 flex-1 resize-none rounded-3xl border border-input bg-card px-4 py-3 text-base outline-none placeholder:text-[#6b655f] focus-visible:border-laranja focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-laranja/35"
           />
           <Button type="submit" size="icon-lg" disabled={pendente || !texto.trim()} aria-label="Enviar">
             <ArrowUp aria-hidden />
@@ -250,7 +250,7 @@ function Resposta({
 
   return (
     <article className="flex flex-col gap-4">
-      <p className="w-fit max-w-[95%] whitespace-pre-line rounded-2xl rounded-bl-md bg-white px-4 py-3 ring-1 ring-terra/8">
+      <p className="w-fit max-w-[95%] whitespace-pre-line rounded-2xl rounded-bl-md bg-card px-4 py-3 ring-1 ring-foreground/8">
         {resposta.mensagem}
       </p>
 
@@ -286,14 +286,14 @@ function Resposta({
       )}
 
       {materiais.length > 0 && tipo !== "pergunta" && (
-        <section className="rounded-xl bg-pessego/70 p-4 sm:p-5">
+        <section className="rounded-xl bg-accent p-4 sm:p-5">
           <h3 className="flex items-center gap-2 text-sm font-medium">
-            <Package aria-hidden className="size-4 text-laranja-escuro" />
+            <Package aria-hidden className="size-4 text-laranja" />
             Materiais que você provavelmente vai comprar
           </h3>
-          <ul className="mt-2 grid gap-x-4 gap-y-1 text-sm text-terra-2 sm:grid-cols-2">
+          <ul className="mt-2 grid gap-x-4 gap-y-1 text-sm text-muted-foreground sm:grid-cols-2">
             {materiais.map((m) => (
-              <li key={m} className="flex items-baseline gap-2 before:size-1.5 before:shrink-0 before:translate-y-[-0.15em] before:rounded-full before:bg-laranja-escuro before:content-['']">
+              <li key={m} className="flex items-baseline gap-2 before:size-1.5 before:shrink-0 before:translate-y-[-0.15em] before:rounded-full before:bg-laranja before:content-['']">
                 {m}
               </li>
             ))}
@@ -303,7 +303,7 @@ function Resposta({
 
       {indisponiveis.length > 0 && (
         <section className="flex flex-col gap-2">
-          <h3 className="text-sm font-medium text-terra-2">
+          <h3 className="text-sm font-medium text-muted-foreground">
             Também serviria, mas está indisponível no momento. Abra para pedir um aviso quando voltar:
           </h3>
           <ul className="flex flex-col gap-2">
@@ -315,7 +315,7 @@ function Resposta({
       )}
 
       {tipo === "sem_equipamento" && (
-        <div className="flex flex-col gap-2 rounded-xl bg-white p-4 text-sm ring-1 ring-terra/8">
+        <div className="flex flex-col gap-2 rounded-xl bg-card p-4 text-sm ring-1 ring-foreground/8">
           <p>
             {resposta.equipamentoFaltante
               ? `Não temos "${resposta.equipamentoFaltante}" para alugar agora.`
@@ -325,7 +325,7 @@ function Resposta({
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             <Link
               href={hrefSugerir({ equipamento: resposta.equipamentoFaltante, servico: resposta.servicoResumo })}
-              className="w-fit font-medium text-laranja-escuro underline underline-offset-4"
+              className="w-fit font-medium text-laranja underline underline-offset-4"
             >
               Sugerir este equipamento
             </Link>
@@ -352,13 +352,13 @@ function CartaoRecomendado({ item, indisponivel }: { item: ItemRecomendado; indi
       <Link
         href={indisponivel ? `/equipamentos/${item.id}#avise-me` : `/equipamentos/${item.id}`}
         className={cn(
-          "group flex items-start justify-between gap-4 rounded-xl bg-white p-4 ring-1 ring-terra/8 transition-shadow hover:ring-laranja",
-          indisponivel && "bg-white/60 text-terra-2",
+          "group flex items-start justify-between gap-4 rounded-xl bg-card p-4 ring-1 ring-foreground/8 transition-shadow hover:ring-laranja",
+          indisponivel && "bg-white/60 text-muted-foreground",
         )}
       >
         <span className="flex flex-col gap-1">
           <span className="font-heading text-lg font-semibold">{item.nome}</span>
-          <span className="text-sm font-medium text-laranja-escuro">{item.categoria}</span>
+          <span className="text-sm font-medium text-laranja">{item.categoria}</span>
           {item.motivo && <span className="text-sm text-muted-foreground">{item.motivo}</span>}
         </span>
         <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja">

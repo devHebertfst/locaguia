@@ -30,7 +30,7 @@ export function NavAdminLinks({ caminho, admin }: { caminho?: string; admin?: bo
             aria-current={atual ? "page" : undefined}
             className={cn(
               "rounded-full px-3 py-1.5 font-medium text-muted-foreground transition-colors hover:bg-concreto hover:text-foreground",
-              "aria-[current=page]:bg-terra aria-[current=page]:text-white",
+              "aria-[current=page]:bg-creme aria-[current=page]:text-terra",
             )}
           >
             {rotulo}

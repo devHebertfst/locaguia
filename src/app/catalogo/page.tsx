@@ -64,7 +64,7 @@ async function Catalogo({ searchParams }: Pick<PageProps<"/catalogo">, "searchPa
           ))}
         </ul>
       ) : (
-        <div className="flex flex-col items-start gap-3 rounded-xl border-2 border-dashed border-terra/15 p-8">
+        <div className="flex flex-col items-start gap-3 rounded-xl border-2 border-dashed border-foreground/15 p-8">
           <p className="font-heading text-xl font-semibold">
             {filtrando ? "Nenhum equipamento encontrado." : "Nenhum equipamento cadastrado ainda."}
           </p>
@@ -73,7 +73,7 @@ async function Catalogo({ searchParams }: Pick<PageProps<"/catalogo">, "searchPa
               <Link href="/catalogo" scroll={false} className="font-medium underline">
                 Ver todos os equipamentos
               </Link>
-              <Link href="/assistente" className="font-medium text-laranja-escuro underline">
+              <Link href="/assistente" className="font-medium text-laranja underline">
                 Perguntar ao assistente
               </Link>
               <Link href={hrefSugerir({ equipamento: filtros.busca })} className="font-medium underline">
@@ -90,11 +90,11 @@ async function Catalogo({ searchParams }: Pick<PageProps<"/catalogo">, "searchPa
 function CatalogoCarregando() {
   return (
     <div aria-busy="true" aria-label="Carregando equipamentos" className="flex flex-col gap-4">
-      <div className="h-[3.25rem] animate-pulse rounded-full bg-white" />
+      <div className="h-[3.25rem] animate-pulse rounded-full bg-card" />
       <div className="h-9 w-2/3 animate-pulse rounded-full bg-white/70" />
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
         {Array.from({ length: 6 }, (_, i) => (
-          <div key={i} className="h-32 animate-pulse rounded-xl bg-white sm:aspect-[4/5] sm:h-auto" />
+          <div key={i} className="h-32 animate-pulse rounded-xl bg-card sm:aspect-[4/5] sm:h-auto" />
         ))}
       </div>
     </div>

@@ -27,7 +27,7 @@ export default function PedidosPage({ searchParams }: PageProps<"/admin/pedidos"
         <h1 className="text-4xl font-medium tracking-[-0.02em]">Pedidos de orçamento</h1>
         <p className="text-muted-foreground">Responda os novos pelo WhatsApp e marque o andamento de cada um.</p>
       </div>
-      <Suspense fallback={<div aria-busy="true" aria-label="Carregando pedidos" className="h-96 animate-pulse rounded-2xl bg-white" />}>
+      <Suspense fallback={<div aria-busy="true" aria-label="Carregando pedidos" className="h-96 animate-pulse rounded-2xl bg-card" />}>
         {searchParams.then((p) => (
           <Lista filtro={lerFiltroPedido(p.status)} />
         ))}
@@ -54,11 +54,11 @@ async function Lista({ filtro }: { filtro: FiltroPedido }) {
                 scroll={false}
                 className={cn(
                   "inline-flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors",
-                  f === filtro ? "bg-terra text-white" : "bg-white text-terra-2 ring-1 ring-terra/12 hover:ring-terra/40",
+                  f === filtro ? "bg-creme text-terra" : "bg-card text-muted-foreground ring-1 ring-foreground/12 hover:ring-foreground/40",
                 )}
               >
                 {ROTULO_FILTRO[f]}
-                <span className={cn("tabular-nums", f === filtro ? "text-white/70" : "text-muted-foreground")}>{total(f)}</span>
+                <span className={cn("tabular-nums", f === filtro ? "text-terra/70" : "text-muted-foreground")}>{total(f)}</span>
               </Link>
             </li>
           ))}
@@ -66,18 +66,18 @@ async function Lista({ filtro }: { filtro: FiltroPedido }) {
       </nav>
 
       {pedidos.length === 0 ? (
-        <p className="rounded-2xl border-2 border-dashed border-terra/15 p-8 text-muted-foreground">
+        <p className="rounded-2xl border-2 border-dashed border-foreground/15 p-8 text-muted-foreground">
           {filtro === "abertos" ? "Nenhum pedido esperando resposta. Os novos aparecem aqui." : "Nenhum pedido neste filtro."}
         </p>
       ) : (
-        <ul aria-label="Pedidos" className="divide-y divide-terra/8 overflow-hidden rounded-2xl bg-white ring-1 ring-terra/8">
+        <ul aria-label="Pedidos" className="divide-y divide-foreground/8 overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/8">
           {pedidos.map((p) => (
             <li key={p.id}>
               <Link
                 href={`/admin/pedidos/${p.id}`}
                 className={cn(
                   "group grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2 p-4 transition-colors hover:bg-concreto/60 sm:px-5 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1.6fr)_auto_auto]",
-                  p.status === "nova" && "bg-[#fff8f1]",
+                  p.status === "nova" && "bg-laranja/[0.07]",
                 )}
               >
                 <span className="flex min-w-0 flex-col gap-0.5">
@@ -89,7 +89,7 @@ async function Lista({ filtro }: { filtro: FiltroPedido }) {
                   </span>
                 </span>
                 <span className="col-span-2 flex min-w-0 flex-col gap-0.5 text-sm md:col-span-1">
-                  <span className="truncate text-terra-2">{p.equipamentos.join(", ") || "Sem equipamento"}</span>
+                  <span className="truncate text-muted-foreground">{p.equipamentos.join(", ") || "Sem equipamento"}</span>
                   <span className="text-muted-foreground tabular-nums">
                     {formatarData(p.dataInicio)} a {formatarData(p.dataFim)}
                   </span>
