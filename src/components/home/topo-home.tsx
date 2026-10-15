@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
@@ -15,6 +15,82 @@ const hrefPergunta = (pergunta: string) => `/assistente?pergunta=${encodeURIComp
 export function TopoHome() {
   const router = useRouter();
   const [texto, setTexto] = useState("");
+  const secaoRef = useRef<HTMLElement>(null);
+  const luzRef = useRef<HTMLDivElement>(null);
+  const betoneiraRef = useRef<HTMLDivElement>(null);
+
+  // Brilho laranja que segue o mouse pela seção e, quando ele sai, volta
+  // para trás da betoneira. Sem mouse (toque), fica parado atrás dela.
+  useEffect(() => {
+    const secao = secaoRef.current;
+    const luz = luzRef.current;
+    const betoneira = betoneiraRef.current;
+    if (!secao || !luz || !betoneira) return;
+    const comMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const descanso = () => {
+      const s = secao.getBoundingClientRect();
+      const b = betoneira.getBoundingClientRect();
+      return { x: b.left - s.left + b.width / 2, y: b.top - s.top + b.height * 0.55 };
+    };
+    let atual = descanso();
+    let alvo = atual;
+    let quadro = 0;
+    let ultimo = 0;
+    let dentro = false;
+
+    const aplicar = () => {
+      luz.style.transform = `translate(${atual.x}px, ${atual.y}px) translate(-50%, -50%)`;
+      secao.style.setProperty("--luz-x", `${atual.x}px`);
+      secao.style.setProperty("--luz-y", `${atual.y}px`);
+    };
+    const desenhar = (agora: number) => {
+      quadro = 0;
+      const dt = ultimo ? Math.min(0.05, (agora - ultimo) / 1000) : 1 / 60;
+      ultimo = agora;
+      const k = reduzir ? 1 : Math.min(1, dt * (dentro ? 7 : 2.5));
+      atual = { x: atual.x + (alvo.x - atual.x) * k, y: atual.y + (alvo.y - atual.y) * k };
+      aplicar();
+      if (Math.hypot(alvo.x - atual.x, alvo.y - atual.y) > 0.5) quadro = requestAnimationFrame(desenhar);
+      else ultimo = 0;
+    };
+    const pedir = () => {
+      if (!quadro) quadro = requestAnimationFrame(desenhar);
+    };
+
+    const mover = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      const s = secao.getBoundingClientRect();
+      dentro = true;
+      alvo = { x: e.clientX - s.left, y: e.clientY - s.top };
+      pedir();
+    };
+    const sair = () => {
+      dentro = false;
+      alvo = descanso();
+      pedir();
+    };
+    const redimensionar = () => {
+      if (dentro) return;
+      atual = alvo = descanso();
+      aplicar();
+    };
+
+    aplicar();
+    luz.classList.replace("opacity-0", "opacity-100");
+    window.addEventListener("resize", redimensionar);
+    if (comMouse) {
+      secao.addEventListener("pointermove", mover);
+      secao.addEventListener("pointerleave", sair);
+    }
+    return () => {
+      cancelAnimationFrame(quadro);
+      window.removeEventListener("resize", redimensionar);
+      secao.removeEventListener("pointermove", mover);
+      secao.removeEventListener("pointerleave", sair);
+    };
+  }, []);
 
   function perguntar(pergunta: string) {
     const limpa = pergunta.trim();
@@ -29,11 +105,16 @@ export function TopoHome() {
   }
 
   return (
-    <section className="chao-terra relative isolate overflow-hidden">
-      {/* Grade de prumo ao fundo, como a planta riscada no canteiro. */}
+    <section ref={secaoRef} className="chao-terra relative isolate overflow-hidden">
+      {/* Grade de prumo ao fundo, como a planta riscada no canteiro; acende em volta do brilho. */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_70%_45%,#000_20%,transparent_75%)]"
+        className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_var(--luz-x,70%)_var(--luz-y,45%),#000_20%,transparent_75%)]"
+      />
+      <div
+        ref={luzRef}
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 -z-10 size-[30rem] rounded-full bg-[radial-gradient(circle,rgb(241_147_60/0.28)_0%,rgb(241_147_60/0.12)_40%,transparent_70%)] opacity-0 transition-opacity duration-700 md:size-[38rem]"
       />
       <div className="mx-auto grid w-full max-w-7xl items-center gap-2 px-4 pt-10 pb-12 sm:px-6 md:min-h-[min(46rem,calc(100svh-4rem))] md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-8 md:py-16">
         <div className="relative z-10 flex flex-col gap-6">
@@ -98,11 +179,7 @@ export function TopoHome() {
           </Link>
         </div>
 
-        <div className="relative -mx-4 h-[19rem] sm:h-[26rem] md:mx-0 md:h-[36rem]">
-          <div
-            aria-hidden
-            className="absolute inset-x-[12%] bottom-[8%] top-[18%] -z-10 rounded-full bg-laranja/20 blur-3xl"
-          />
+        <div ref={betoneiraRef} className="relative -mx-4 h-[19rem] sm:h-[26rem] md:mx-0 md:h-[36rem]">
           <Betoneira3D className="size-full" />
         </div>
       </div>

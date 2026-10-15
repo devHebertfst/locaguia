@@ -4,22 +4,21 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
 import { Avaliacoes } from "@/components/home/avaliacoes";
+import { FraseConcreto } from "@/components/home/frase-concreto";
 import { TopoHome } from "@/components/home/topo-home";
+import { TrilhoVitrine } from "@/components/home/trilho-vitrine";
+import { FotoEquipamento } from "@/components/catalogo/foto-equipamento";
+import { SeloDisponibilidade } from "@/components/catalogo/selo-disponibilidade";
 import { buttonVariants } from "@/components/ui/button";
 import { hrefCatalogo } from "@/lib/catalogo/filtros";
+import { listarEquipamentos, resumoCategorias } from "@/lib/catalogo/consultas";
 import { cn } from "@/lib/utils";
-import { resumoCategorias } from "@/lib/catalogo/consultas";
 
 // Fotos de obra do Unsplash (licença livre). A query precisa ser igual à
 // liberada em next.config.ts (remotePatterns).
 const unsplash = (id: string) => `https://images.unsplash.com/photo-${id}?w=2000&q=80&fm=jpg`;
 
 const FOTOS = {
-  obra: {
-    src: unsplash("1770822662967-7f66605f9103"),
-    alt: "Equipe com colete laranja e capacete colocando areia numa betoneira, numa rua em obra",
-    credito: "Agustín Pimentel",
-  },
   profissional: {
     src: unsplash("1694522362256-6c907336af43"),
     alt: "Profissional de capacete cortando uma placa de concreto com esmerilhadeira",
@@ -94,20 +93,27 @@ export default function HomePage() {
   return (
     <main className="flex flex-1 flex-col">
       <TopoHome />
+      <FraseConcreto />
 
-      {/* Faixa de abertura: a obra de verdade, depois da betoneira desenhada. */}
-      <section aria-labelledby="titulo-obra" className="relative isolate flex min-h-[32rem] items-end overflow-hidden bg-terra md:min-h-[38rem]">
-        <Image src={FOTOS.obra.src} alt={FOTOS.obra.alt} fill sizes="100vw" className="-z-10 object-cover object-[50%_40%]" />
-        {/* Véu terra: forte à esquerda e embaixo, onde fica o texto; a foto respira à direita. */}
-        <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(36_29_23/0.95)_0%,rgb(36_29_23/0.6)_40%,rgb(36_29_23/0)_75%),linear-gradient(to_right,rgb(36_29_23/0.85)_0%,rgb(36_29_23/0.5)_45%,rgb(36_29_23/0)_75%)]" />
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 pt-40 pb-12 sm:px-6 md:pb-16">
-          <h2 id="titulo-obra" className="max-w-3xl text-[clamp(2.2rem,5.5vw,4.25rem)] leading-[1.02] font-medium tracking-[-0.025em] text-white">
-            Máquina boa é a que trabalha. <span className="text-laranja">Alugue pelo tempo da obra.</span>
-          </h2>
-          <p className="max-w-xl text-lg leading-relaxed text-white/80">
-            Do contrapiso ao acabamento, você pega o equipamento quando precisa e devolve quando o serviço acaba.
-          </p>
-          <p className="text-xs text-white/50">Foto: {FOTOS.obra.credito} / Unsplash</p>
+      <section aria-labelledby="titulo-vitrine" className="overflow-x-clip bg-concreto">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-16 sm:px-6 md:py-20">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="flex flex-col gap-2">
+              <h2 id="titulo-vitrine" className={tituloSecao}>
+                Na loja agora
+              </h2>
+              <p className="max-w-[48ch] text-lg leading-relaxed text-muted-foreground">
+                Equipamentos disponíveis para alugar. Toque em um para ver os detalhes e pedir orçamento.
+              </p>
+            </div>
+            <Link href="/catalogo" className="group inline-flex items-center gap-2 font-semibold text-laranja">
+              <span className="underline decoration-2 underline-offset-4">Ver o catálogo completo</span>
+              <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+          <Suspense fallback={<VitrineCarregando />}>
+            <Vitrine />
+          </Suspense>
         </div>
       </section>
 
@@ -280,6 +286,53 @@ function Publico({
         <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
       </Link>
     </article>
+  );
+}
+
+const LIMITE_VITRINE = 12;
+
+// Só equipamentos disponíveis: a vitrine mostra o que dá para alugar hoje. Sem nenhum, a faixa some.
+async function Vitrine() {
+  await connection(); // lido a cada pedido, como o catálogo: nunca no build
+  const disponiveis = (await listarEquipamentos({ busca: "" })).filter((e) => e.disponivel);
+  if (disponiveis.length === 0) {
+    return <p className="text-muted-foreground">Nenhum equipamento disponível neste momento. Veja o catálogo completo.</p>;
+  }
+  // Com foto primeiro: a vitrine é a primeira impressão do catálogo.
+  const itens = [...disponiveis].sort((a, b) => Number(b.fotos.length > 0) - Number(a.fotos.length > 0)).slice(0, LIMITE_VITRINE);
+  return (
+    <TrilhoVitrine rotulo="Equipamentos disponíveis">
+      {itens.map((e) => (
+        <li key={e.id} className="w-[16.5rem] shrink-0 sm:w-[19rem]">
+          <Link
+            href={`/equipamentos/${e.id}`}
+            className="group flex h-full flex-col gap-4 rounded-xl bg-card p-2.5 ring-1 ring-foreground/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(0_0_0/0.6)] sm:p-3"
+          >
+            <FotoEquipamento src={e.fotos[0]} alt={e.nome} sizes="(min-width: 640px) 304px, 264px" className="rounded-lg" />
+            <span className="flex flex-1 flex-col gap-1 px-1.5 pb-1">
+              <span className="font-heading text-lg leading-snug font-semibold">{e.nome}</span>
+              <span className="text-sm font-medium text-laranja">{e.categoria}</span>
+              <span className="mt-auto flex items-center justify-between gap-3 pt-3">
+                <SeloDisponibilidade disponivel />
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja group-hover:text-terra">
+                  <ArrowUpRight aria-hidden className="size-4" />
+                </span>
+              </span>
+            </span>
+          </Link>
+        </li>
+      ))}
+    </TrilhoVitrine>
+  );
+}
+
+function VitrineCarregando() {
+  return (
+    <div aria-busy="true" aria-label="Carregando equipamentos" className="flex gap-3 overflow-hidden sm:gap-4">
+      {Array.from({ length: 4 }, (_, i) => (
+        <div key={i} className="h-[22rem] w-[16.5rem] shrink-0 animate-pulse rounded-xl bg-card sm:w-[19rem]" />
+      ))}
+    </div>
   );
 }
 

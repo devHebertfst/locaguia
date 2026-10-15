@@ -134,4 +134,29 @@
   .chao-terra :focus-visible {
     outline-color: var(--laranja);
   }
+
+  /* Frase da home: letras com contorno de fôrma e, por cima, uma cópia
+     preenchida de concreto (cinza com brita e areia), revelada da esquerda até --corte. */
+  .frase-forma {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(246 241 236 / 0.4);
+  }
+  .frase-concreto {
+    /* Folga em cima e embaixo: o fundo precisa cobrir o rabo do "q" e o topo do "b",
+       que passam da linha. O padding devolve o texto ao lugar. */
+    inset: -0.25em 0;
+    padding: 0.25em 0;
+    -webkit-text-stroke: 0;
+    background-color: #a59e96;
+    background-image:
+      radial-gradient(rgb(36 29 23 / 0.2) 0.7px, transparent 1.2px),
+      radial-gradient(rgb(255 255 255 / 0.14) 0.7px, transparent 1.2px),
+      linear-gradient(to bottom, #c2bbb2, #9d968e 40%, #8a837b);
+    background-size: 7px 11px, 13px 9px, 100% 100%;
+    background-position: 0 0, 5px 3px, 0 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    clip-path: inset(0 calc(100% - var(--corte, 100%)) 0 0);
+    /* sem --corte (sem JS ou sem movimento), a frase aparece inteira cortada */
+  }
 }
