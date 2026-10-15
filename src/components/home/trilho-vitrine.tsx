@@ -32,6 +32,9 @@ export function TrilhoVitrine({ rotulo, children }: { rotulo: string; children: 
     let visivel = true;
     let focado = false;
     let arrasto: { x: number; inicio: number; ultimoX: number; ultimoT: number; vel: number; moveu: boolean } | null = null;
+    // Etiquetas penduradas nos cartões: um pêndulo com mola, empurrado pela velocidade da esteira.
+    let balanco = 0;
+    let giroBalanco = 0;
 
     // Largura de uma volta: distância entre o começo de uma cópia e o da seguinte.
     const volta = () => {
@@ -49,8 +52,10 @@ export function TrilhoVitrine({ rotulo, children }: { rotulo: string; children: 
       quadro = 0;
       const dt = ultimo ? Math.min(0.05, (agora - ultimo) / 1000) : 0;
       ultimo = agora;
+      let velocidade = arrasto ? arrasto.vel : 0;
       if (!arrasto) {
         const normal = reduzir || focado ? 0 : VELOCIDADE * sentido;
+        velocidade = normal + impulso + (dt > 0 ? (empurrao * Math.min(1, dt * 7)) / dt : 0);
         deslocamento += (normal + impulso) * dt;
         impulso *= Math.pow(0.04, dt);
         if (Math.abs(impulso) < 1) impulso = 0;
@@ -62,7 +67,12 @@ export function TrilhoVitrine({ rotulo, children }: { rotulo: string; children: 
       const largura = volta();
       if (largura > 0) deslocamento = ((deslocamento % largura) + largura) % largura;
       faixa!.style.transform = `translate3d(${-deslocamento}px, 0, 0)`;
-      const andando = !reduzir || impulso !== 0 || empurrao !== 0 || arrasto;
+      // Cartão indo para a esquerda: a ponta da etiqueta fica para trás (para a direita).
+      const inclinacao = Math.max(-30, Math.min(30, -velocidade * 0.03));
+      giroBalanco += (-55 * (balanco - inclinacao) - 5 * giroBalanco) * dt;
+      balanco += giroBalanco * dt;
+      faixa!.style.setProperty("--balanco", `${balanco.toFixed(2)}deg`);
+      const andando = !reduzir || impulso !== 0 || empurrao !== 0 || arrasto || Math.abs(giroBalanco) > 0.05;
       if (visivel && andando) pedirQuadro();
       else ultimo = 0;
     }
