@@ -81,7 +81,7 @@ export function FraseConcreto() {
       // Serra: o centro do disco fica na linha de corte, no meio da altura da frase.
       const largura = titulo!.offsetWidth;
       const altura = titulo!.offsetHeight;
-      const diametro = Math.min(altura * 0.95, 340);
+      const diametro = Math.min(altura * 0.6, 210);
       const x = titulo!.offsetLeft + largura * p;
       const y = titulo!.offsetTop + altura / 2;
       // O desenho tem folga em volta do disco (capa e cabo): o disco ocupa 196 de 300.

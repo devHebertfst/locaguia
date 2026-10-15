@@ -16,16 +16,14 @@ export function TopoHome() {
   const router = useRouter();
   const [texto, setTexto] = useState("");
   const secaoRef = useRef<HTMLElement>(null);
-  const luzRef = useRef<HTMLDivElement>(null);
   const betoneiraRef = useRef<HTMLDivElement>(null);
 
-  // Brilho laranja que segue o mouse pela seção e, quando ele sai, volta
-  // para trás da betoneira. Sem mouse (toque), fica parado atrás dela.
+  // A grade acende em laranja em volta do mouse e, quando ele sai, o ponto
+  // aceso volta para trás da betoneira. Sem mouse (toque), fica parado ali.
   useEffect(() => {
     const secao = secaoRef.current;
-    const luz = luzRef.current;
     const betoneira = betoneiraRef.current;
-    if (!secao || !luz || !betoneira) return;
+    if (!secao || !betoneira) return;
     const comMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -41,7 +39,6 @@ export function TopoHome() {
     let dentro = false;
 
     const aplicar = () => {
-      luz.style.transform = `translate(${atual.x}px, ${atual.y}px) translate(-50%, -50%)`;
       secao.style.setProperty("--luz-x", `${atual.x}px`);
       secao.style.setProperty("--luz-y", `${atual.y}px`);
     };
@@ -79,7 +76,6 @@ export function TopoHome() {
     };
 
     aplicar();
-    luz.classList.replace("opacity-0", "opacity-100");
     window.addEventListener("resize", redimensionar);
     if (comMouse) {
       secao.addEventListener("pointermove", mover);
@@ -112,17 +108,6 @@ export function TopoHome() {
         aria-hidden
         className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_70%_45%,#000_20%,transparent_75%)]"
       />
-      {/* Brilho: miolo forte e definido, borda que cai suave. Desbota perto do
-          topo e do fim da seção para não ser cortado numa linha reta. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,transparent,#000_12%,#000_72%,transparent)]"
-      >
-        <div
-          ref={luzRef}
-          className="absolute top-0 left-0 size-[26rem] rounded-full bg-[radial-gradient(circle,rgb(241_147_60/0.42)_0%,rgb(241_147_60/0.24)_14%,rgb(241_147_60/0.1)_34%,rgb(241_147_60/0.03)_52%,transparent_70%)] opacity-0 transition-opacity duration-700 md:size-[34rem]"
-        />
-      </div>
       {/* A mesma grade em laranja, acesa só em volta do brilho e sumindo no topo e no fim. */}
       <div
         aria-hidden
@@ -192,6 +177,10 @@ export function TopoHome() {
         </div>
 
         <div ref={betoneiraRef} className="relative -mx-4 h-[19rem] sm:h-[26rem] md:mx-0 md:h-[36rem]">
+          <div
+            aria-hidden
+            className="absolute inset-x-[12%] bottom-[8%] top-[18%] -z-10 rounded-full bg-laranja/20 blur-3xl"
+          />
           <Betoneira3D className="size-full" />
         </div>
       </div>
