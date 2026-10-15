@@ -1,14 +1,16 @@
-import { Suspense } from "react";
+import { Suspense, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { connection } from "next/server";
 import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
 import { Avaliacoes } from "@/components/home/avaliacoes";
 import { FraseConcreto } from "@/components/home/frase-concreto";
+import { IconeCategoria } from "@/components/home/icone-categoria";
+import { MarteleteFechamento } from "@/components/home/martelete-fechamento";
+import { PassosParafusados } from "@/components/home/passos-parafusados";
 import { TopoHome } from "@/components/home/topo-home";
 import { TrilhoVitrine } from "@/components/home/trilho-vitrine";
 import { FotoEquipamento } from "@/components/catalogo/foto-equipamento";
-import { SeloDisponibilidade } from "@/components/catalogo/selo-disponibilidade";
 import { buttonVariants } from "@/components/ui/button";
 import { hrefCatalogo } from "@/lib/catalogo/filtros";
 import { listarEquipamentos, resumoCategorias } from "@/lib/catalogo/consultas";
@@ -191,22 +193,7 @@ export default function HomePage() {
               Você não precisa saber o nome do equipamento. Precisa saber o que vai fazer.
             </p>
           </div>
-          <ol className="flex flex-col">
-            {PASSOS.map((passo, i) => (
-              <li
-                key={passo.titulo}
-                className="grid grid-cols-[3.5rem_1fr] gap-x-5 border-t border-foreground/12 py-7 first:border-t-0 first:pt-0 sm:grid-cols-[5rem_1fr]"
-              >
-                <span aria-hidden className="font-heading text-5xl leading-none font-semibold text-laranja sm:text-6xl">
-                  {i + 1}
-                </span>
-                <div className="flex flex-col gap-1.5">
-                  <h3 className="text-2xl font-semibold">{passo.titulo}</h3>
-                  <p className="max-w-[52ch] text-muted-foreground">{passo.texto}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          <PassosParafusados passos={PASSOS} />
         </div>
       </section>
 
@@ -238,17 +225,20 @@ export default function HomePage() {
           <h2 id="titulo-fechamento" className="max-w-2xl text-[clamp(1.9rem,4vw,3rem)] leading-[1.05] font-medium tracking-[-0.02em]">
             Bora começar a obra? Conte o serviço para o assistente.
           </h2>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/assistente" className={cn(buttonVariants({ variant: "terra", size: "lg" }), "bg-terra text-creme hover:bg-terra-2")}>
-              Perguntar ao assistente
-              <ArrowRight aria-hidden />
-            </Link>
-            <Link
-              href="/catalogo"
-              className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-terra/40 text-terra hover:border-terra hover:bg-white/30")}
-            >
-              Ver o catálogo
-            </Link>
+          <div className="flex items-end gap-5">
+            <div className="flex flex-wrap gap-3">
+              <Link href="/assistente" className={cn(buttonVariants({ variant: "terra", size: "lg" }), "bg-terra text-creme hover:bg-terra-2")}>
+                Perguntar ao assistente
+                <ArrowRight aria-hidden />
+              </Link>
+              <Link
+                href="/catalogo"
+                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-terra/40 text-terra hover:border-terra hover:bg-white/30")}
+              >
+                Ver o catálogo
+              </Link>
+            </div>
+            <MarteleteFechamento />
           </div>
         </div>
       </section>
@@ -302,18 +292,21 @@ async function Vitrine() {
   const itens = [...disponiveis].sort((a, b) => Number(b.fotos.length > 0) - Number(a.fotos.length > 0)).slice(0, LIMITE_VITRINE);
   return (
     <TrilhoVitrine rotulo="Equipamentos disponíveis">
-      {itens.map((e) => (
-        <li key={e.id} className="w-[16.5rem] shrink-0 sm:w-[19rem]">
+      {itens.map((e, i) => (
+        <li key={e.id} className="w-[16.5rem] shrink-0 sm:w-[19rem]" style={{ "--peso": 0.8 + (i % 3) * 0.17 } as CSSProperties}>
           <Link
             href={`/equipamentos/${e.id}`}
             className="group flex h-full flex-col gap-4 rounded-xl bg-card p-2.5 ring-1 ring-foreground/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(0_0_0/0.6)] sm:p-3"
           >
-            <FotoEquipamento src={e.fotos[0]} alt={e.nome} sizes="(min-width: 640px) 304px, 264px" className="rounded-lg" />
+            <span className="relative block">
+              <FotoEquipamento src={e.fotos[0]} alt={e.nome} sizes="(min-width: 640px) 304px, 264px" className="rounded-lg" />
+              <EtiquetaPendurada />
+            </span>
             <span className="flex flex-1 flex-col gap-1 px-1.5 pb-1">
               <span className="font-heading text-lg leading-snug font-semibold">{e.nome}</span>
               <span className="text-sm font-medium text-laranja">{e.categoria}</span>
               <span className="mt-auto flex items-center justify-between gap-3 pt-3">
-                <SeloDisponibilidade disponivel />
+                <span className="text-sm text-muted-foreground transition-colors group-hover:text-foreground">Ver detalhes</span>
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja group-hover:text-terra">
                   <ArrowUpRight aria-hidden className="size-4" />
                 </span>
@@ -323,6 +316,21 @@ async function Vitrine() {
         </li>
       ))}
     </TrilhoVitrine>
+  );
+}
+
+// Etiqueta laranja pendurada num prego no canto da foto. Balança com a
+// esteira (--balanco, calculado no trilho), cada cartão com um peso diferente.
+function EtiquetaPendurada() {
+  return (
+    <span className="absolute -top-1 right-5 flex origin-top flex-col items-center [transform:rotate(calc(var(--balanco,0deg)*var(--peso,1)))]">
+      <span aria-hidden className="size-2.5 rounded-full bg-terra-2 ring-2 ring-terra" />
+      <span aria-hidden className="h-4 w-px bg-creme/70" />
+      <span className="relative rounded-md bg-laranja px-2.5 pt-2.5 pb-1.5 font-heading text-xs font-bold tracking-wide text-terra uppercase shadow-[0_6px_14px_-6px_rgb(0_0_0/0.7)]">
+        <span aria-hidden className="absolute top-1 left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-terra/70" />
+        Disponível
+      </span>
+    </span>
   );
 }
 
@@ -348,12 +356,15 @@ async function Categorias() {
         <li key={categoria}>
           <Link
             href={hrefCatalogo({ categoria })}
-            className="group flex h-full items-center justify-between gap-4 rounded-xl bg-card px-5 py-5 ring-1 ring-foreground/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(36_29_23/0.35)]"
+            className="group flex h-full items-center justify-between gap-4 rounded-xl bg-card px-4 py-4 ring-1 ring-foreground/8 transition-[box-shadow,translate] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-20px_rgb(36_29_23/0.35)]"
           >
-            <span className="flex flex-col gap-0.5">
-              <span className="font-heading text-xl font-semibold">{categoria}</span>
-              <span className="text-sm text-muted-foreground">
-                {total === 1 ? "1 equipamento" : `${total} equipamentos`}
+            <span className="flex items-center gap-4">
+              <IconeCategoria categoria={categoria} />
+              <span className="flex flex-col gap-0.5">
+                <span className="font-heading text-xl font-semibold">{categoria}</span>
+                <span className="text-sm text-muted-foreground">
+                  {total === 1 ? "1 equipamento" : `${total} equipamentos`}
+                </span>
               </span>
             </span>
             <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-concreto transition-colors group-hover:bg-laranja">

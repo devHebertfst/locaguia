@@ -159,4 +159,223 @@
     clip-path: inset(0 calc(100% - var(--corte, 100%)) 0 0);
     /* sem --corte (sem JS ou sem movimento), a frase aparece inteira cortada */
   }
+
+  /* Ícones de ferramenta das categorias: ligam com o mouse no cartão ou,
+     sem mouse, quando o cartão aparece (data-ligado). */
+  .icone-ferramenta .preenche {
+    fill: rgb(241 147 60 / 0.18);
+  }
+  .icone-ferramenta [class*="anima-"] {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(.group:hover, .group:focus-visible) .icone-ferramenta,
+  .icone-ferramenta[data-ligado] {
+    --ligada: running;
+  }
+  .icone-ferramenta [class*="anima-"] {
+    animation-play-state: var(--ligada, paused);
+    animation-iteration-count: infinite;
+  }
+  .icone-ferramenta .anima-giro {
+    animation: ferramenta-giro 0.7s linear infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-treme-y {
+    animation: ferramenta-treme-y 0.09s linear infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-treme-x {
+    animation: ferramenta-treme-x 0.08s linear infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-broca {
+    animation: ferramenta-broca 0.18s linear infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-lascas,
+  .icone-ferramenta .anima-poeira {
+    opacity: 0;
+    animation: ferramenta-poeira 0.36s ease-out infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-pula {
+    animation: ferramenta-pula 0.36s ease-in-out infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-sobe {
+    animation: ferramenta-sobe 1.4s ease-in-out infinite alternate var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-anda {
+    animation: ferramenta-anda 0.7s ease-in-out infinite alternate var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-pisca {
+    animation: ferramenta-pisca 0.5s steps(2) infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-gotas {
+    animation: ferramenta-gotas 0.5s linear infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-orbita {
+    animation: ferramenta-orbita 0.24s linear infinite var(--ligada, paused);
+  }
+  .icone-ferramenta .anima-chacoalha {
+    animation: ferramenta-chacoalha 0.32s ease-in-out infinite alternate var(--ligada, paused);
+  }
+  /* Fora de uso, as peças que só aparecem trabalhando ficam escondidas. */
+  .icone-ferramenta:not([data-ligado]) :is(.anima-lascas, .anima-poeira) {
+    visibility: hidden;
+  }
+  :is(.group:hover, .group:focus-visible) .icone-ferramenta :is(.anima-lascas, .anima-poeira) {
+    visibility: visible;
+  }
+}
+
+/* Parafusadeira dos passos: o bit gira (faixas descendo) enquanto aperta. */
+.parafusadeira[data-girando] .parafusadeira-bit {
+  animation: parafusadeira-bit 0.12s linear infinite;
+}
+/* Martelete do fechamento: treme e solta lascas em rajadas; as trincas ficam. */
+.martelete .martelete-trincas {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+.martelete[data-trincado] .martelete-trincas {
+  stroke-dashoffset: 0;
+}
+.martelete .martelete-lascas {
+  opacity: 0;
+}
+.martelete[data-batendo] .martelete-corpo {
+  animation: martelete-bate 0.075s linear infinite;
+}
+.martelete[data-batendo] .martelete-lascas > * {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: martelete-lasca 0.3s ease-out infinite;
+}
+.martelete[data-batendo] .martelete-lascas {
+  opacity: 1;
+}
+.martelete-lascas > :nth-child(1) {
+  --lasca: -14px, -16px;
+}
+.martelete-lascas > :nth-child(2) {
+  --lasca: 15px, -14px;
+  animation-delay: 0.08s !important;
+}
+.martelete-lascas > :nth-child(3) {
+  --lasca: 2px, -22px;
+  animation-delay: 0.15s !important;
+}
+.martelete-lascas > :nth-child(4) {
+  --lasca: -20px, -6px;
+  animation-delay: 0.22s !important;
+}
+@keyframes martelete-bate {
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes martelete-lasca {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--lasca)) rotate(160deg);
+  }
+}
+
+@keyframes parafusadeira-bit {
+  to {
+    transform: translateY(6px);
+  }
+}
+
+@keyframes ferramenta-giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ferramenta-treme-y {
+  50% {
+    transform: translateY(1.6px);
+  }
+}
+@keyframes ferramenta-treme-x {
+  50% {
+    transform: translateX(0.9px);
+  }
+}
+@keyframes ferramenta-broca {
+  to {
+    transform: translateX(-3px);
+  }
+}
+@keyframes ferramenta-poeira {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+@keyframes ferramenta-pula {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes ferramenta-sobe {
+  to {
+    transform: translateY(-9px);
+  }
+}
+@keyframes ferramenta-anda {
+  from {
+    transform: translateX(-1.5px);
+  }
+  to {
+    transform: translateX(1.5px);
+  }
+}
+@keyframes ferramenta-pisca {
+  50% {
+    opacity: 0.25;
+  }
+}
+@keyframes ferramenta-gotas {
+  from {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes ferramenta-orbita {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(1.5px, 1px);
+  }
+  50% {
+    transform: translate(0, 2px);
+  }
+  75% {
+    transform: translate(-1.5px, 1px);
+  }
+}
+@keyframes ferramenta-chacoalha {
+  from {
+    transform: rotate(-12deg);
+  }
+  to {
+    transform: rotate(12deg);
+  }
 }
