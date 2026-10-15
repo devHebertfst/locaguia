@@ -9,7 +9,7 @@ test("a home leva ao catálogo, filtrado pela categoria escolhida", async ({ pag
   await page.goto("/");
   await page.getByRole("region", { name: "Equipamentos por tipo de serviço" }).getByRole("link", { name: /Corte/ }).click();
   await expect(page).toHaveURL(/\/catalogo\?categoria=Corte$/);
-  await expect(page.getByRole("link", { name: /Serra mármore/ })).toBeVisible();
+  await expect(page.getByRole("article").getByRole("link", { name: /Serra mármore/ })).toBeVisible();
 });
 
 test("perguntas frequentes abrem e fecham", async ({ page }) => {
