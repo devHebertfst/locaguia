@@ -49,7 +49,8 @@ export function TopoHome() {
       quadro = 0;
       const dt = ultimo ? Math.min(0.05, (agora - ultimo) / 1000) : 1 / 60;
       ultimo = agora;
-      const k = reduzir ? 1 : Math.min(1, dt * (dentro ? 7 : 2.5));
+      // Dentro, gruda no mouse com um mínimo de suavidade; ao sair, volta devagar.
+      const k = reduzir ? 1 : Math.min(1, dt * (dentro ? 24 : 3));
       atual = { x: atual.x + (alvo.x - atual.x) * k, y: atual.y + (alvo.y - atual.y) * k };
       aplicar();
       if (Math.hypot(alvo.x - atual.x, alvo.y - atual.y) > 0.5) quadro = requestAnimationFrame(desenhar);
@@ -106,15 +107,26 @@ export function TopoHome() {
 
   return (
     <section ref={secaoRef} className="chao-terra relative isolate overflow-hidden">
-      {/* Grade de prumo ao fundo, como a planta riscada no canteiro; acende em volta do brilho. */}
+      {/* Grade de prumo ao fundo, como a planta riscada no canteiro. */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_var(--luz-x,70%)_var(--luz-y,45%),#000_20%,transparent_75%)]"
+        className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_70%_45%,#000_20%,transparent_75%)]"
       />
+      {/* Brilho: miolo forte e definido, borda que cai suave. Desbota perto do
+          topo e do fim da seção para não ser cortado numa linha reta. */}
       <div
-        ref={luzRef}
         aria-hidden
-        className="pointer-events-none absolute top-0 left-0 -z-10 size-[30rem] rounded-full bg-[radial-gradient(circle,rgb(241_147_60/0.28)_0%,rgb(241_147_60/0.12)_40%,transparent_70%)] opacity-0 transition-opacity duration-700 md:size-[38rem]"
+        className="pointer-events-none absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,transparent,#000_12%,#000_72%,transparent)]"
+      >
+        <div
+          ref={luzRef}
+          className="absolute top-0 left-0 size-[26rem] rounded-full bg-[radial-gradient(circle,rgb(241_147_60/0.42)_0%,rgb(241_147_60/0.24)_14%,rgb(241_147_60/0.1)_34%,rgb(241_147_60/0.03)_52%,transparent_70%)] opacity-0 transition-opacity duration-700 md:size-[34rem]"
+        />
+      </div>
+      {/* A mesma grade em laranja, acesa só em volta do brilho e sumindo no topo e no fim. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 [background-image:linear-gradient(rgb(241_147_60/0.5)_1px,transparent_1px),linear-gradient(90deg,rgb(241_147_60/0.5)_1px,transparent_1px)] [background-size:56px_56px] [mask-composite:intersect] [mask-image:radial-gradient(circle_13rem_at_var(--luz-x,-50rem)_var(--luz-y,-50rem),#000_0%,rgb(0_0_0/0.5)_45%,transparent_100%),linear-gradient(to_bottom,transparent,#000_18%,#000_78%,transparent)]"
       />
       <div className="mx-auto grid w-full max-w-7xl items-center gap-2 px-4 pt-10 pb-12 sm:px-6 md:min-h-[min(46rem,calc(100svh-4rem))] md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-8 md:py-16">
         <div className="relative z-10 flex flex-col gap-6">
